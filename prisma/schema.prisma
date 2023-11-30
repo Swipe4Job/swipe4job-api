@@ -1,0 +1,204 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model api_tokens {
+  id             Int      @id @default(autoincrement())
+  reference      String   @db.VarChar(100)
+  wallet_address String   @db.VarChar(50)
+  token          String   @db.VarChar(355)
+  created_at     DateTime @default(now()) @db.DateTime(0)
+  updated_at     DateTime @default(now()) @db.DateTime(0)
+}
+
+model config {
+  id         Int      @id @default(autoincrement())
+  key        String   @default("") @db.VarChar(100)
+  num_value  Int?
+  text_value String?  @db.LongText
+  created_at DateTime @default(now()) @db.DateTime(0)
+  updated_at DateTime @default(now()) @db.DateTime(0)
+}
+
+model municipalities {
+  id            Int             @id @default(autoincrement())
+  name          String          @default("") @db.VarChar(100)
+  ine_code      String          @db.VarChar(100)
+  coordinates   String          @default("") @db.LongText
+  created_at    DateTime        @default(now()) @db.DateTime(0)
+  updated_at    DateTime        @default(now()) @db.DateTime(0)
+  province_id   Int             @default(1)
+  provinces     provinces       @relation(fields: [province_id], references: [id], onUpdate: Restrict, map: "municipalities_FK")
+  sensors       sensors[]
+  stats_daily   stats_daily[]
+  stats_hourly  stats_hourly[]
+  stats_monthly stats_monthly[]
+
+  @@index([province_id], map: "municipalities_FK")
+  @@index([name], map: "municipalities_name_IDX")
+}
+
+model provinces {
+  id             Int              @id @default(autoincrement())
+  ine_code       String           @default("") @db.VarChar(100)
+  name           String           @default("") @db.VarChar(100)
+  created_at     DateTime         @default(now()) @db.DateTime(0)
+  updated_at     DateTime         @default(now()) @db.DateTime(0)
+  municipalities municipalities[]
+}
+
+model sensor_data {
+  id              Int       @id @default(autoincrement())
+  sensor_id       Int
+  battery         Decimal?  @db.Decimal(10, 2)
+  concentration   Decimal   @default(0.00) @db.Decimal(10, 2)
+  temperature     Decimal   @default(0.00) @db.Decimal(10, 2)
+  pressure        Decimal   @default(0.00) @db.Decimal(10, 2)
+  humidity        Decimal   @default(0.00) @db.Decimal(10, 2)
+  created_at      DateTime  @default(now()) @db.DateTime(0)
+  updated_at      DateTime  @default(now()) @db.DateTime(0)
+  reported_at     DateTime  @db.DateTime(0)
+  hash_data       String    @default("") @db.LongText
+  hash            String    @default("") @db.VarChar(255)
+  transaction     String    @default("") @db.VarChar(255)
+  transaction_url String?   @db.VarChar(255)
+  signature       String?   @db.VarChar(255)
+  chain           String?   @db.VarChar(255)
+  blockchain_dt   DateTime? @db.DateTime(0)
+  blockchain      Boolean?  @default(false)
+  sensors         sensors   @relation(fields: [sensor_id], references: [id], onUpdate: Restrict, map: "sensor_data_FK")
+
+  @@index([sensor_id], map: "sensor_data_FK")
+}
+
+model sensor_groups {
+  id            Int       @id @default(autoincrement())
+  user_id       Int
+  group_name    String    @db.VarChar(100)
+  description   String?   @db.LongText
+  created_at    DateTime  @default(now()) @db.DateTime(0)
+  updated_at    DateTime  @default(now()) @db.DateTime(0)
+  default_group Boolean   @default(false)
+  users         users     @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "sensor_groups_FK")
+  sensors       sensors[]
+
+  @@index([user_id], map: "sensor_groups_FK")
+}
+
+model sensor_models {
+  id          Int       @id @default(autoincrement())
+  reference   String    @unique(map: "reference") @default("") @db.VarChar(100)
+  name        String    @default("") @db.VarChar(100)
+  schema      String    @default("") @db.LongText
+  description String    @default("") @db.LongText
+  created_at  DateTime  @default(now()) @db.DateTime(0)
+  updated_at  DateTime  @default(now()) @db.DateTime(0)
+  sensors     sensors[]
+}
+
+model sensors {
+  id              Int                  @id @default(autoincrement())
+  coordinates     Unsupported("point") @default(dbgenerated("(st_geometryfromtext('POINT(0 0)'))"))
+  name            String               @default("") @db.VarChar(100)
+  created_at      DateTime             @default(now()) @db.DateTime(0)
+  updated_at      DateTime             @default(now()) @db.DateTime(0)
+  device_id       String               @default("") @db.VarChar(100)
+  municipality_id Int
+  model_id        Int                  @default(1)
+  group_id        Int
+  user_id         Int
+  sensor_data     sensor_data[]
+  municipalities  municipalities       @relation(fields: [municipality_id], references: [id], onUpdate: Restrict, map: "sensors_FK")
+  sensor_models   sensor_models        @relation(fields: [model_id], references: [id], onUpdate: Restrict, map: "sensors_FK_1")
+  sensor_groups   sensor_groups        @relation(fields: [group_id], references: [id], onUpdate: Restrict, map: "sensors_FK_group_id")
+  users           users                @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "sensors_FK_user_id")
+
+  @@index([municipality_id], map: "sensors_FK")
+  @@index([model_id], map: "sensors_FK_1")
+  @@index([group_id], map: "sensors_FK_group_id")
+  @@index([user_id], map: "sensors_FK_user_id")
+}
+
+model stats_daily {
+  id             Int            @id @default(autoincrement())
+  city           Int
+  min            Decimal        @db.Decimal(10, 0)
+  max            Decimal        @db.Decimal(10, 0)
+  avg            Decimal        @db.Decimal(10, 0)
+  type           String         @db.VarChar(100)
+  stat_date      DateTime       @db.DateTime(0)
+  created_at     DateTime       @default(now()) @db.DateTime(0)
+  updated_at     DateTime       @default(now()) @db.DateTime(0)
+  sensor_id      Int?
+  municipalities municipalities @relation(fields: [city], references: [id], onUpdate: Restrict, map: "stats_daily_FK")
+
+  @@index([city], map: "stats_daily_FK")
+}
+
+model stats_hourly {
+  id             Int            @id @default(autoincrement())
+  city           Int
+  min            Decimal        @db.Decimal(10, 0)
+  max            Decimal        @db.Decimal(10, 0)
+  avg            Decimal        @db.Decimal(10, 0)
+  type           String         @db.VarChar(100)
+  stat_date      DateTime       @db.DateTime(0)
+  created_at     DateTime       @default(now()) @db.DateTime(0)
+  updated_at     DateTime       @default(now()) @db.DateTime(0)
+  sensor_id      Int?
+  municipalities municipalities @relation(fields: [city], references: [id], onUpdate: Restrict, map: "stats_hourly_FK")
+
+  @@index([city], map: "stats_hourly_FK")
+}
+
+model stats_monthly {
+  id             Int            @id @default(autoincrement())
+  city           Int
+  min            Decimal        @db.Decimal(10, 0)
+  max            Decimal        @db.Decimal(10, 0)
+  avg            Decimal        @db.Decimal(10, 0)
+  type           String         @db.VarChar(100)
+  stat_date      DateTime       @db.DateTime(0)
+  created_at     DateTime       @default(now()) @db.DateTime(0)
+  updated_at     DateTime       @default(now()) @db.DateTime(0)
+  sensor_id      Int?
+  municipalities municipalities @relation(fields: [city], references: [id], onUpdate: Restrict, map: "stats_monthly_FK")
+
+  @@index([city], map: "stats_monthly_FK")
+}
+
+model tokens {
+  id              Int      @id @default(autoincrement())
+  wallet_address  String   @default("") @db.VarChar(100)
+  token           String   @db.VarChar(255)
+  created_at      DateTime @default(now()) @db.DateTime(0)
+  updated_at      DateTime @default(now()) @db.DateTime(0)
+  expiration_date DateTime @db.DateTime(0)
+}
+
+model users {
+  id             Int             @id @default(autoincrement())
+  wallet_address String          @default("") @db.VarChar(100)
+  name           String          @default("") @db.VarChar(100)
+  email          String          @unique(map: "email") @db.VarChar(100)
+  phone_number   String          @unique(map: "phone_number") @db.VarChar(100)
+  role           String          @db.VarChar(100)
+  disabled       Boolean         @default(false)
+  created_at     DateTime        @default(now()) @db.DateTime(0)
+  updated_at     DateTime        @default(now()) @db.DateTime(0)
+  sensor_groups  sensor_groups[]
+  sensors        sensors[]
+}
+
+model transactions {
+  id                 String   @id
+  destination_wallet String
+  tokens             Int
+  transaction_date   DateTime
+  state              String
+}
