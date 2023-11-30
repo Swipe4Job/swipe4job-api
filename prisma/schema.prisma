@@ -191,6 +191,7 @@ model users {
   disabled       Boolean         @default(false)
   created_at     DateTime        @default(now()) @db.DateTime(0)
   updated_at     DateTime        @default(now()) @db.DateTime(0)
+  password       String?         @db.VarChar(255)
   sensor_groups  sensor_groups[]
   sensors        sensors[]
 }
