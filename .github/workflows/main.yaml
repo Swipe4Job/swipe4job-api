@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Pulling repo
         run: |
-          cd /home/megatro/apps/dockers/zertiair/
+          cd /home/megatro/apps/dockers/zertiair-api-v2/
           echo "Start GIT PULL"
           git restore .
           git pull
