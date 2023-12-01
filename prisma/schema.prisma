@@ -53,25 +53,27 @@ model provinces {
 }
 
 model sensor_data {
-  id              Int       @id @default(autoincrement())
-  sensor_id       Int
-  battery         Decimal?  @db.Decimal(10, 2)
-  concentration   Decimal   @default(0.00) @db.Decimal(10, 2)
-  temperature     Decimal   @default(0.00) @db.Decimal(10, 2)
-  pressure        Decimal   @default(0.00) @db.Decimal(10, 2)
-  humidity        Decimal   @default(0.00) @db.Decimal(10, 2)
-  created_at      DateTime  @default(now()) @db.DateTime(0)
-  updated_at      DateTime  @default(now()) @db.DateTime(0)
-  reported_at     DateTime  @db.DateTime(0)
-  hash_data       String    @default("") @db.LongText
-  hash            String    @default("") @db.VarChar(255)
-  transaction     String    @default("") @db.VarChar(255)
-  transaction_url String?   @db.VarChar(255)
-  signature       String?   @db.VarChar(255)
-  chain           String?   @db.VarChar(255)
-  blockchain_dt   DateTime? @db.DateTime(0)
-  blockchain      Boolean?  @default(false)
-  sensors         sensors   @relation(fields: [sensor_id], references: [id], onUpdate: Restrict, map: "sensor_data_FK")
+  id                   Int          @id @default(autoincrement())
+  sensor_id            Int
+  battery              Decimal?     @db.Decimal(10, 2)
+  concentration        Decimal      @default(0.00) @db.Decimal(10, 2)
+  temperature          Decimal      @default(0.00) @db.Decimal(10, 2)
+  pressure             Decimal      @default(0.00) @db.Decimal(10, 2)
+  humidity             Decimal      @default(0.00) @db.Decimal(10, 2)
+  created_at           DateTime     @default(now()) @db.DateTime(0)
+  updated_at           DateTime     @default(now()) @db.DateTime(0)
+  reported_at          DateTime     @db.DateTime(0)
+  hash_data            String       @default("") @db.LongText
+  hash                 String       @default("") @db.VarChar(255)
+  transaction          String       @default("") @db.VarChar(255)
+  transaction_url      String?      @db.VarChar(255)
+  signature            String?      @db.VarChar(255)
+  chain                String?      @db.VarChar(255)
+  blockchain_dt        DateTime?    @db.DateTime(0)
+  blockchain           Boolean?     @default(false)
+  sensors              sensors      @relation(fields: [sensor_id], references: [id], onUpdate: Restrict, map: "sensor_data_FK")
+  token_transaction    transactions @relation(fields: [token_transaction_id], references: [id])
+  token_transaction_id String
 
   @@index([sensor_id], map: "sensor_data_FK")
 }
@@ -197,9 +199,10 @@ model users {
 }
 
 model transactions {
-  id                 String   @id
-  destination_wallet String
-  tokens             Int
-  transaction_date   DateTime
-  state              String
+  id                  String        @id
+  destination_wallet  String
+  tokens              Int
+  transaction_date    DateTime
+  state               String
+  sensor_data_entries sensor_data[]
 }
