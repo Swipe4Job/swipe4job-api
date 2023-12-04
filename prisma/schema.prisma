@@ -73,7 +73,7 @@ model sensor_data {
   blockchain           Boolean?     @default(false)
   sensors              sensors      @relation(fields: [sensor_id], references: [id], onUpdate: Restrict, map: "sensor_data_FK")
   token_transaction    transactions @relation(fields: [token_transaction_id], references: [id])
-  token_transaction_id String
+  token_transaction_id String       @default("")
 
   @@index([sensor_id], map: "sensor_data_FK")
 }
