@@ -10,4 +10,8 @@ export class ValueObject<T extends Primitives> {
   public get value(): T {
     return this._value;
   }
+
+  equals(value: ValueObject<T>): boolean {
+    return value.value === this.value;
+  }
 }
