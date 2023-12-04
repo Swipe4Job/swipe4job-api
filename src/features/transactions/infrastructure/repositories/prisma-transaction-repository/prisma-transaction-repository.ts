@@ -57,27 +57,37 @@ export class PrismaTransactionRepository implements TransactionRepository {
   async save(transaction: Transaction): Promise<void> {
     const transactionExists = !!(await this.find(transaction.id));
     if (transactionExists) {
-      await this.prisma.transactions.update({
-        data: {
-          destination_wallet: transaction.destinationWallet.value,
-          tokens: transaction.tokens,
-          transaction_date: transaction.date.value,
-          state: transaction.state.value,
-        },
-        where: {
-          id: transaction.id.value,
-        },
-      });
+      try {
+        await this.prisma.transactions.update({
+          data: {
+            destination_wallet: transaction.destinationWallet.value,
+            tokens: transaction.tokens,
+            transaction_date: transaction.date.value,
+            state: transaction.state.value,
+          },
+          where: {
+            id: transaction.id.value,
+          },
+        });
+      } catch (err) {
+        this.logger.error(err);
+        throw new PersistenceError('Error updating transaction');
+      }
     } else {
-      await this.prisma.transactions.create({
-        data: {
-          id: transaction.id.value,
-          destination_wallet: transaction.destinationWallet.value,
-          tokens: transaction.tokens,
-          transaction_date: transaction.date.value,
-          state: transaction.state.value
-        },
-      });
+      try {
+        await this.prisma.transactions.create({
+          data: {
+            id: transaction.id.value,
+            destination_wallet: transaction.destinationWallet.value,
+            tokens: transaction.tokens,
+            transaction_date: transaction.date.value,
+            state: transaction.state.value,
+          },
+        });
+      } catch (err) {
+        this.logger.error(err);
+        throw new PersistenceError('Error saving transaction');
+      }
     }
   }
 }
