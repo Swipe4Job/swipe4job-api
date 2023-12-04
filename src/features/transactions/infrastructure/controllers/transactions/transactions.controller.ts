@@ -5,7 +5,6 @@ import { TransactionID } from '../../../domain/TransactionID';
 import { WalletAddress } from '../../../../../shared/domain/WalletAddress/WalletAddress';
 import { TransactionRepository } from '../../../domain/TransactionRepository';
 import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse';
-import { InvalidWalletAddress } from '../../../../../shared/domain/WalletAddress/InvalidWalletAddress';
 
 @Controller('transactions')
 export class TransactionsController {
