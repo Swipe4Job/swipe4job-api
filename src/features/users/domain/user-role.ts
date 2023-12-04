@@ -1,3 +1,1 @@
-export class UserRole {
-
-}
+export class UserRole {}
