@@ -35,7 +35,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   // Start application and log info
-  const port = 3000;
+  const port = parseInt(process.env.PORT!) || 3000;
   await app.listen(port);
   logger.log(`Listening on port ${port}`);
 }
