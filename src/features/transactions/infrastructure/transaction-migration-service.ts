@@ -41,7 +41,7 @@ export class TransactionMigrationService implements OnModuleInit {
 
     if (result) {
       this.logger.log(
-        'Empty already transaction saved',
+        'Empty transaction already saved',
         'Transaction Migration Service',
       );
       return;
