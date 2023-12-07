@@ -1,12 +1,12 @@
 import { ValueObject } from '../../../shared/domain/ValueObject/ValueObject';
-import { InvalidTransactionState } from './InvalidTransactionState';
+import { InvalidArgument } from '../../../shared/domain/InvalidArgument';
 
 export class TransactionState extends ValueObject<string> {
   private readonly allowedValues = ['PENDING', 'CLAIMED'];
   constructor(value: string) {
     super(value);
     if (!this.allowedValues.includes(this.value)) {
-      throw new InvalidTransactionState();
+      throw new InvalidArgument('Invalid transaction state');
     }
   }
 
