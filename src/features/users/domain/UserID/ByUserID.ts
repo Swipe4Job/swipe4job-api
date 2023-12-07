@@ -1,4 +1,4 @@
-import {UserCriteria} from "./UserCriteria";
+import {UserCriteria} from "../UserRepository/UserCriteria";
 import {UserId} from "./UserId";
 import {Field, Filter, FilterGroup, Filters, Operand, Operator, Operators, Orders} from "@zertifier/criteria";
 

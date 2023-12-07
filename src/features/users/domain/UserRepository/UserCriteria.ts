@@ -1,8 +1,8 @@
 import {Criteria, Limit, Skip} from "@zertifier/criteria";
 import {Filters} from "@zertifier/criteria/dist/Filters";
 import {Orders} from "@zertifier/criteria/dist/Orders";
-import {InvalidFilterField} from "../../../shared/domain/Criteria/InvalidFilterField";
-import {InvalidOrderField} from "../../../shared/domain/Criteria/InvalidOrderField";
+import {InvalidFilterField} from "../../../../shared/domain/Criteria/InvalidFilterField";
+import {InvalidOrderField} from "../../../../shared/domain/Criteria/InvalidOrderField";
 
 export class UserCriteria extends Criteria {
     private allowedFilterFields = [

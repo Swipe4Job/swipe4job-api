@@ -1,5 +1,5 @@
 import {UserName} from './UserName';
-import {UserId} from './UserId';
+import {UserId} from './UserID/UserId';
 import {WalletAddress} from '../../../shared/domain/WalletAddress/WalletAddress';
 import {UserEmail} from './UserEmail';
 import {UserRole} from './UserRole';
