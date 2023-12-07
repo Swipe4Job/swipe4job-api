@@ -1,5 +1,6 @@
 import { StringValueObject } from './StringValueObject';
 import { v4 as uuidv4 } from 'uuid';
+import {InvalidArgument} from "../InvalidArgument";
 
 export class UUIDValueObject extends StringValueObject {
   private UUIDRegex =
@@ -7,7 +8,7 @@ export class UUIDValueObject extends StringValueObject {
   constructor(value: string) {
     super(value);
     if (!this.UUIDRegex.test(value)) {
-      throw new Error('Invalid UUID');
+      throw new InvalidArgument('Invalid UUID');
     }
   }
 

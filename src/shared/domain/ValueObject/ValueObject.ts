@@ -1,9 +1,11 @@
+import {InvalidArgument} from "../InvalidArgument";
+
 export type Primitives = number | boolean | string | Date;
 
 export class ValueObject<T extends Primitives> {
   constructor(private _value: T) {
     if (this._value === null || this._value === undefined) {
-      throw new Error('Invalid value, it must be defined');
+      throw new InvalidArgument('Invalid value, it must be defined');
     }
   }
 
