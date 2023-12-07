@@ -1,0 +1,10 @@
+{
+  "DATABASE_URL": {
+    "type": "string",
+    "required": true
+  },
+  "PORT": {
+    "type": "integer",
+    "required": false
+  }
+}
