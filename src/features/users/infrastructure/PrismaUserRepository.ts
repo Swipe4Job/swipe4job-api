@@ -2,7 +2,7 @@ import { UserRepository } from '../domain/UserRepository/UserRepository';
 import { UserCriteria } from '../domain/UserRepository/UserCriteria';
 import { User } from '../domain/User';
 import { PrismaProvider } from '../../../shared/infrastructure/services/prisma-client/prisma-provider.service';
-import { PrismaCriteriaService } from '../../../shared/infrastructure/PrismaCriteriaService';
+import { PrismaCriteriaService } from '../../../shared/infrastructure/services/PrismaCriteria/PrismaCriteriaService';
 import { PersistenceError } from '../../../shared/domain/PersistenceError';
 import { ApplicationLogger } from '../../../shared/infrastructure/services/application-logger/application-logger';
 import { UserId } from '../domain/UserID/UserId';

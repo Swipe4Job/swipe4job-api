@@ -21,6 +21,7 @@ export class UserCriteria extends Criteria {
     'id',
     'role',
   ];
+
   constructor(params: {
     filters: Filters;
     orders: Orders;
@@ -54,5 +55,13 @@ export class UserCriteria extends Criteria {
         );
       }
     }
+  }
+
+  public static override NONE(): UserCriteria {
+    return new UserCriteria({
+        filters: Filters.EMPTY(),
+        orders: Orders.EMPTY(),
+      },
+    );
   }
 }

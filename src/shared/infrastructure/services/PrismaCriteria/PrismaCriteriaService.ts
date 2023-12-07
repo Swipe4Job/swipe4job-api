@@ -5,7 +5,9 @@ import {
   OrderDirection,
   Orders,
 } from '@zertifier/criteria';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class PrismaCriteriaService {
   convertFilters(filters: Filters): any {
     const groups = filters.groups;
