@@ -7,7 +7,6 @@ import { HttpResponse } from '../shared/infrastructure/HttpResponse';
 export class HttpAllErrorsFilter<T> implements ExceptionFilter {
   constructor(private logger: ApplicationLogger) {}
   catch(error: T, host: ArgumentsHost) {
-    this.logger.debug('All errors filter');
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 

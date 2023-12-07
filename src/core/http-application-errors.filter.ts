@@ -9,7 +9,6 @@ export class HttpApplicationErrorsFilter implements ExceptionFilter {
   constructor(private logger: ApplicationLogger) {}
 
   catch(error: ApplicationError, host: ArgumentsHost): void {
-    this.logger.debug('ApplicationErrorsFilter');
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
