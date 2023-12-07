@@ -1,4 +1,4 @@
-import {InvalidArgument} from "../InvalidArgument";
+import { InvalidArgument } from '../InvalidArgument';
 
 export type Primitives = number | boolean | string | Date;
 

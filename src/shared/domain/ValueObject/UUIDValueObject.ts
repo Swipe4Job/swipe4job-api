@@ -1,6 +1,6 @@
 import { StringValueObject } from './StringValueObject';
 import { v4 as uuidv4 } from 'uuid';
-import {InvalidArgument} from "../InvalidArgument";
+import { InvalidArgument } from '../InvalidArgument';
 
 export class UUIDValueObject extends StringValueObject {
   private UUIDRegex =
