@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AuthToken, AuthTokenPayload } from './AuthToken';
-import Either from 'fp-ts/Either';
+import * as Either from 'fp-ts/Either';
 import { errors, jwtVerify } from 'jose';
 import { EnvironmentService } from '../../../shared/infrastructure/services/environment/environment.service';
 import { AuthTokenExpired } from './AuthTokenExpired';

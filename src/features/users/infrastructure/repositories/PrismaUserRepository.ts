@@ -47,23 +47,37 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async save(user: User): Promise<void> {
+    // If user is not found it will throw an error
     const users = await this.search(new ByUserID(user.id));
     if (!users) {
-      // Create new user
-      this.prisma.users.create({
+      // Create user
+      await this.prisma.users.create({
         data: {
-          id: user.id.value,
+          uuid: user.id.value,
           email: user.email.value,
           name: user.name.value,
           role: user.role.value,
-          phone_number: user.phoneNumber!.value,
+          phone_number: user.phoneNumber.value,
           wallet_address: user.walletAddress?.value,
           password: user.password?.value,
           disabled: !user.enabled,
         },
       });
+    } else {
+      // Update users
+      await this.prisma.users.update({
+        data: {
+          email: user.email.value,
+          name: user.name.value,
+          role: user.role.value,
+          phone_number: user.phoneNumber.value,
+          wallet_address: user.walletAddress?.value,
+          password: user.password?.value,
+          disabled: !user.enabled,
+        },
+        where: { uuid: user.id.value },
+      });
     }
-    // Update users
   }
 
   async search(criteria: UserCriteria): Promise<Array<User> | undefined> {
@@ -82,9 +96,13 @@ export class PrismaUserRepository implements UserRepository {
       throw new PersistenceError('Error getting users from database');
     }
 
+    if (result.length == 0) {
+      return;
+    }
+
     return result.map((entry) => {
       return new User({
-        id: new UserId(entry.id),
+        id: new UserId(entry.uuid),
         email: new UserEmail(entry.email),
         name: new UserName(entry.name),
         role: UserRole.from(entry.role),

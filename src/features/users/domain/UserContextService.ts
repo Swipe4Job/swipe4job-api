@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { UserRepository } from './UserRepository/UserRepository';
 import { UserCriteria } from './UserRepository/UserCriteria';
 import { User } from './User';
-import Either from 'fp-ts/Either';
+import * as Either from 'fp-ts/Either';
 import { ApplicationError } from '../../../shared/domain/ApplicationError/ApplicationError';
 import { UserEmail } from './UserEmail/UserEmail';
 import { UnexpectedError } from '../../../shared/domain/ApplicationError/UnexpectedError';
 import { ByUserEmail } from './UserEmail/ByUserEmail';
 import { UserNotFound } from './UserRepository/UserNotFound';
 import { InvalidUserCredentials } from './InvalidUserCredentials';
+import { ApplicationLogger } from '../../../shared/infrastructure/services/application-logger/application-logger';
 
 /**
  * UserContextService is a service to interact with user bounded context.
@@ -24,7 +25,7 @@ import { InvalidUserCredentials } from './InvalidUserCredentials';
 export class UserContextService {
   // TODO this class seems to not respect Single Responsibility principle
   // In a future may this should be split
-  constructor(private userRepository: UserRepository) {}
+  constructor(private logger: ApplicationLogger, private userRepository: UserRepository) {}
 
   public async searchUsers(
     criteria: UserCriteria,
@@ -42,6 +43,7 @@ export class UserContextService {
       const criteria = new ByUserEmail(userEmail);
 
       const users = await this.userRepository.find(criteria);
+      this.logger.debug(users);
       const user = users[0];
       if (user.password && !(await user.password.match(password))) {
         return Either.left(new InvalidUserCredentials("Password don't match"));
@@ -57,6 +59,7 @@ export class UserContextService {
       if (err instanceof ApplicationError) {
         return Either.left(err);
       } else {
+        this.logger.debug(err);
         return Either.left(new UnexpectedError());
       }
     }

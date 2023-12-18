@@ -24,7 +24,7 @@ export class HttpAllErrorsFilter<T> implements ExceptionFilter {
     if (error instanceof HttpException) {
       return response
         .status(error.getStatus())
-        .json(HttpResponse.failure(error.message));
+        .json(HttpResponse.failure(error.message).serialize());
     }
 
     response

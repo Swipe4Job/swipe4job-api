@@ -3,7 +3,7 @@ import { SignJWT } from 'jose';
 import { InvalidTokenPayload } from '../InvalidTokenPayload';
 
 export type UserAuthTokenPayload = {
-  id: number;
+  id: string;
 };
 
 export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {

@@ -2,9 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { ApplicationLogger } from '../../../../shared/infrastructure/services/application-logger/application-logger';
 import { JWTService } from '../../domain/JWTService';
 import { UserContextService } from '../../../users/domain/UserContextService';
-import { UserAuthToken } from '../../domain/users/UserAuthToken';
+import {
+  UserAuthToken,
+  UserAuthTokenPayload,
+} from '../../domain/users/UserAuthToken';
 import { pipe } from 'fp-ts/function';
-import Either from 'fp-ts/Either';
+import * as Either from 'fp-ts/Either';
 import { ApplicationError } from '../../../../shared/domain/ApplicationError/ApplicationError';
 
 @Injectable()
@@ -27,10 +30,12 @@ export class UserLogin {
     return pipe(
       await this.userContextService.validCredentials(user, password),
       Either.map((user) => {
-        const authTokenData = { id: user.id.value };
+        const authTokenData: UserAuthTokenPayload = { id: user.id.value };
+        const refresh = UserAuthToken.createRefreshToken(authTokenData);
+        const access = UserAuthToken.createAccessToken(authTokenData);
         return {
-          refresh: UserAuthToken.createRefreshToken(authTokenData),
-          access: UserAuthToken.createAccessToken(authTokenData),
+          refresh,
+          access,
         };
       }),
     );
