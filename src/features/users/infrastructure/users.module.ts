@@ -4,6 +4,7 @@ import { PrismaUserRepository } from './PrismaUserRepository';
 import { UsersController } from './users-controller/users.controller';
 import { SharedProvidersModule } from '../../../shared/infrastructure/services/shared-providers.module';
 import { UserRegister } from '../application/UserRegister';
+import { UserContextService } from '../domain/UserContextService';
 
 @Module({
   providers: [
@@ -12,8 +13,9 @@ import { UserRegister } from '../application/UserRegister';
       useClass: PrismaUserRepository,
     },
     UserRegister,
+    UserContextService,
   ],
-  exports: [UserRepository],
+  exports: [UserContextService],
   controllers: [UsersController],
   imports: [SharedProvidersModule],
 })

@@ -6,5 +6,9 @@
   "PORT": {
     "type": "integer",
     "required": false
+  },
+  "JWT_SECRET": {
+    "type": "string",
+    "required": true
   }
 }

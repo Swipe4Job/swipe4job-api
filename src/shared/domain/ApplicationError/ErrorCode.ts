@@ -7,4 +7,5 @@ export enum ErrorCode {
   FORBIDDEN = 2,
   UNAUTHORIZED = 3,
   INVALID_ARGUMENT = 4,
+  AUTH_TOKEN_EXPIRED = 5,
 }

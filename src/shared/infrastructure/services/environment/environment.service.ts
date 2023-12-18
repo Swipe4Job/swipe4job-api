@@ -6,6 +6,7 @@ import { InvalidEnvironmentVariable } from '../../../domain/InvalidEnvironmentVa
 export interface EnvironmentVariables {
   DATABASE_URL: string;
   PORT: number;
+  JWT_SECRET: string;
 }
 
 @Injectable()
@@ -14,6 +15,7 @@ export class EnvironmentService {
   private _environmentVariables: EnvironmentVariables = {
     DATABASE_URL: '',
     PORT: 3000,
+    JWT_SECRET: '',
   };
 
   public get ENV(): EnvironmentVariables {
