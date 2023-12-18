@@ -1,7 +1,7 @@
 import { UserName } from './UserName';
 import { UserId } from './UserID/UserId';
 import { WalletAddress } from '../../../shared/domain/WalletAddress/WalletAddress';
-import { UserEmail } from './UserEmail';
+import { UserEmail } from './UserEmail/UserEmail';
 import { UserRole } from './UserRole';
 import { PhoneNumber } from './PhoneNumber/PhoneNumber';
 import { UserPassword } from './UserPassword';

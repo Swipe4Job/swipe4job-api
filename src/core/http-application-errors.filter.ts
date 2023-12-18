@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { ApplicationError } from '../shared/domain/ApplicationError/ApplicationError';
 import { ApplicationLogger } from '../shared/infrastructure/services/application-logger/application-logger';
 import { HttpResponse } from '../shared/infrastructure/HttpResponse';
+import { ErrorCodeMapper } from '../shared/infrastructure/ErrorCodeMapper';
 
 @Catch(ApplicationError)
 export class HttpApplicationErrorsFilter implements ExceptionFilter {
@@ -13,9 +14,12 @@ export class HttpApplicationErrorsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
 
     if (error.showStack) {
-      this.logger.error(error.message, error.stack);
+      this.logger.error(error.stack);
     }
 
-    response.status(500).json(HttpResponse.failure(error.message).serialize());
+    const statusCode = ErrorCodeMapper.toHttpStatusCode(error.errorCode);
+    response
+      .status(statusCode)
+      .json(HttpResponse.failure(error.message).serialize());
   }
 }

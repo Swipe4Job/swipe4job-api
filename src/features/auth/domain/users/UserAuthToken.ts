@@ -1,6 +1,6 @@
-import { AuthToken, AuthTokenKind, AuthTokenPayload } from './AuthToken';
+import { AuthToken, AuthTokenKind, AuthTokenPayload } from '../AuthToken';
 import { SignJWT } from 'jose';
-import { InvalidTokenPayload } from './InvalidTokenPayload';
+import { InvalidTokenPayload } from '../InvalidTokenPayload';
 
 export type UserAuthTokenPayload = {
   id: number;
@@ -14,6 +14,14 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
   constructor(data: UserAuthTokenPayload, kind: AuthTokenKind) {
     super();
     this.payload = { data, type: this.type, kind };
+  }
+
+  public static createRefreshToken(data: UserAuthTokenPayload) {
+    return new UserAuthToken(data, 'refresh');
+  }
+
+  public static createAccessToken(data: UserAuthTokenPayload) {
+    return new UserAuthToken(data, 'access');
   }
 
   prepareSignature(): SignJWT {

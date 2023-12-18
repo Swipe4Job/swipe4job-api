@@ -2,6 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { UserRepository } from './UserRepository/UserRepository';
 import { UserCriteria } from './UserRepository/UserCriteria';
 import { User } from './User';
+import Either from 'fp-ts/Either';
+import { ApplicationError } from '../../../shared/domain/ApplicationError/ApplicationError';
+import { UserEmail } from './UserEmail/UserEmail';
+import { UnexpectedError } from '../../../shared/domain/ApplicationError/UnexpectedError';
+import { ByUserEmail } from './UserEmail/ByUserEmail';
+import { UserNotFound } from './UserRepository/UserNotFound';
+import { InvalidUserCredentials } from './InvalidUserCredentials';
 
 /**
  * UserContextService is a service to interact with user bounded context.
@@ -15,11 +22,43 @@ import { User } from './User';
  */
 @Injectable()
 export class UserContextService {
+  // TODO this class seems to not respect Single Responsibility principle
+  // In a future may this should be split
   constructor(private userRepository: UserRepository) {}
 
   public async searchUsers(
     criteria: UserCriteria,
   ): Promise<User[] | undefined> {
     return this.userRepository.search(criteria);
+  }
+
+  public async validCredentials(
+    email: string,
+    password: string,
+  ): Promise<Either.Either<ApplicationError, User>> {
+    // TODO check user credentials
+    try {
+      const userEmail = new UserEmail(email);
+      const criteria = new ByUserEmail(userEmail);
+
+      const users = await this.userRepository.find(criteria);
+      const user = users[0];
+      if (user.password && !(await user.password.match(password))) {
+        return Either.left(new InvalidUserCredentials("Password don't match"));
+      }
+
+      return Either.right(user);
+    } catch (err) {
+      if (err instanceof UserNotFound) {
+        return Either.left(
+          new InvalidUserCredentials(`User with email ${email} not found`),
+        );
+      }
+      if (err instanceof ApplicationError) {
+        return Either.left(err);
+      } else {
+        return Either.left(new UnexpectedError());
+      }
+    }
   }
 }

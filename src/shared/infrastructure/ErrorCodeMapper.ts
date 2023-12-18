@@ -8,6 +8,7 @@ export class ErrorCodeMapper {
       [ErrorCode.UNAUTHORIZED]: 401,
       [ErrorCode.INVALID_ARGUMENT]: 400,
       [ErrorCode.BAD_REQUEST]: 400,
+      [ErrorCode.AUTH_TOKEN_EXPIRED]: 402,
     };
 
     return mapping[errorCode];

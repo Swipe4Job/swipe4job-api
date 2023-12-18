@@ -11,6 +11,11 @@ import { PrismaCriteriaService } from './PrismaCriteria/PrismaCriteriaService';
     EnvironmentService,
     PrismaCriteriaService,
   ],
-  exports: [ApplicationLogger, PrismaProvider, PrismaCriteriaService],
+  exports: [
+    ApplicationLogger,
+    PrismaProvider,
+    PrismaCriteriaService,
+    EnvironmentService,
+  ],
 })
 export class SharedProvidersModule {}

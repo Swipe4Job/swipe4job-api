@@ -2,11 +2,24 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { SharedProvidersModule } from '../shared/infrastructure/services/shared-providers.module';
 import { TransactionsModule } from '../features/transactions/infrastructure/transactions.module';
 import { RequestLoggerMiddleware } from './request-logger.middleware';
-import { UsersModule } from '../features/users/infrastructure/users.module';
+import { UsersControllersModule } from '../features/users/infrastructure/controllers/users-controllers.module';
+import { RouterModule } from '@nestjs/core';
+import { AuthModule } from '../features/auth/infrastructure/auth.module';
 
 @Module({
   providers: [RequestLoggerMiddleware],
-  imports: [SharedProvidersModule, TransactionsModule, UsersModule],
+  imports: [
+    SharedProvidersModule,
+    TransactionsModule,
+    UsersControllersModule,
+    AuthModule,
+    RouterModule.register([
+      {
+        path: '/auth',
+        module: AuthModule,
+      },
+    ]),
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {

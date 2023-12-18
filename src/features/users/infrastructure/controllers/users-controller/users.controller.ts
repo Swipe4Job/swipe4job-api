@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
-import { UserRepository } from '../../domain/UserRepository/UserRepository';
-import { ListUsers } from '../../application/ListUsers';
-import { UserCriteria } from '../../domain/UserRepository/UserCriteria';
-import { HttpResponse } from '../../../../shared/infrastructure/HttpResponse';
+import { UserRepository } from '../../../domain/UserRepository/UserRepository';
+import { ListUsers } from '../../../application/ListUsers';
+import { UserCriteria } from '../../../domain/UserRepository/UserCriteria';
+import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse';
 
 @Controller('users')
 export class UsersController {
