@@ -1,4 +1,4 @@
-import { Body, Controller, Get } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
 import { UserLogin } from '../../application/users/UserLogin';
 import { UserLoginRequestDTO } from './DTOs/UserLoginRequestDTO';
 import { pipe } from 'fp-ts/function';
@@ -12,7 +12,7 @@ export class AuthUsersController {
     private userLoginUseCase: UserLogin,
     private jwtService: JWTService,
   ) {}
-  @Get('login')
+  @Post('login')
   async userLogin(@Body() { email, password }: UserLoginRequestDTO) {
     const result = await this.userLoginUseCase.web2(email, password);
     const { refresh, access } = pipe(
@@ -33,4 +33,10 @@ export class AuthUsersController {
       refreshToken: signedRefreshToken,
     });
   }
+
+  @Get('refresh')
+  async userRefresh() {}
+
+  @Delete('logout')
+  async userLogout() {}
 }

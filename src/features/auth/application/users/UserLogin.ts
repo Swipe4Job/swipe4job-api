@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ApplicationLogger } from '../../../../shared/infrastructure/services/application-logger/application-logger';
-import { JWTService } from '../../domain/JWTService';
 import { UserContextService } from '../../../users/domain/UserContextService';
 import {
   UserAuthToken,
@@ -14,7 +13,6 @@ import { ApplicationError } from '../../../../shared/domain/ApplicationError/App
 export class UserLogin {
   constructor(
     private logger: ApplicationLogger,
-    private jwtService: JWTService,
     private userContextService: UserContextService,
   ) {}
 
