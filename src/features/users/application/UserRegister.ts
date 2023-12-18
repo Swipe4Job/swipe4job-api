@@ -9,6 +9,7 @@ export class UserRegister {
   constructor(private userRepository: UserRepository) {}
   public async run(user: User) {
     const users = await this.userRepository.search(new ByUserID(user.id));
+    // TODO check if client has permissions
     if (users) {
       // Cannot register new user
       throw new UserAlreadyRegistered();
