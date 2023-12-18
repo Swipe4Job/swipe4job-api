@@ -6,8 +6,7 @@ import { HttpResponse } from '../../../../shared/infrastructure/HttpResponse';
 
 @Controller('users')
 export class UsersController {
-  constructor(private userRepository: UserRepository) {
-  }
+  constructor(private userRepository: UserRepository) {}
   @Get()
   async getUsers() {
     const users = await ListUsers.run(this.userRepository, UserCriteria.NONE());

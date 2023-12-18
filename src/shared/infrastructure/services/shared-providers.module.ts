@@ -5,7 +5,12 @@ import { EnvironmentService } from './environment/environment.service';
 import { PrismaCriteriaService } from './PrismaCriteria/PrismaCriteriaService';
 
 @Module({
-  providers: [ApplicationLogger, PrismaProvider, EnvironmentService, PrismaCriteriaService],
+  providers: [
+    ApplicationLogger,
+    PrismaProvider,
+    EnvironmentService,
+    PrismaCriteriaService,
+  ],
   exports: [ApplicationLogger, PrismaProvider, PrismaCriteriaService],
 })
 export class SharedProvidersModule {}

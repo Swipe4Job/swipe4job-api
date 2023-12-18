@@ -13,6 +13,6 @@ import { SharedProvidersModule } from '../../../shared/infrastructure/services/s
   ],
   exports: [UserRepository],
   controllers: [UsersController],
-  imports: [SharedProvidersModule]
+  imports: [SharedProvidersModule],
 })
 export class UsersModule {}

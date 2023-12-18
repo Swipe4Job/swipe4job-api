@@ -4,16 +4,16 @@ import { MissingEnvironmentVariable } from '../../../domain/MissingEnvironmentVa
 import { InvalidEnvironmentVariable } from '../../../domain/InvalidEnvironmentVariable';
 
 export interface EnvironmentVariables {
-  DATABASE_URL: string,
-  PORT: number,
+  DATABASE_URL: string;
+  PORT: number;
 }
 
 @Injectable()
 export class EnvironmentService {
-  private _loaded: boolean = false;
+  private _loaded = false;
   private _environmentVariables: EnvironmentVariables = {
     DATABASE_URL: '',
-    PORT: 3000
+    PORT: 3000,
   };
 
   public get ENV(): EnvironmentVariables {
@@ -21,7 +21,9 @@ export class EnvironmentService {
       for (const [varName, schemaValue] of Object.entries(schema)) {
         const providedValue = process.env[varName];
         if (schemaValue.required && !providedValue) {
-          throw new MissingEnvironmentVariable(`Missing environment variable ${varName}`);
+          throw new MissingEnvironmentVariable(
+            `Missing environment variable ${varName}`,
+          );
         }
 
         if (!providedValue) {
@@ -35,9 +37,11 @@ export class EnvironmentService {
           case 'integer':
             const number = parseInt(providedValue);
             if (isNaN(number)) {
-              throw new InvalidEnvironmentVariable(`Invalid environment variable ${varName}`);
+              throw new InvalidEnvironmentVariable(
+                `Invalid environment variable ${varName}`,
+              );
             }
-            (this._environmentVariables as any)[varName] = (providedValue);
+            (this._environmentVariables as any)[varName] = providedValue;
             break;
           // TODO add more cases
         }

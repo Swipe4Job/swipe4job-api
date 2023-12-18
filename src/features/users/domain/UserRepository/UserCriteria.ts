@@ -59,9 +59,8 @@ export class UserCriteria extends Criteria {
 
   public static override NONE(): UserCriteria {
     return new UserCriteria({
-        filters: Filters.EMPTY(),
-        orders: Orders.EMPTY(),
-      },
-    );
+      filters: Filters.EMPTY(),
+      orders: Orders.EMPTY(),
+    });
   }
 }
