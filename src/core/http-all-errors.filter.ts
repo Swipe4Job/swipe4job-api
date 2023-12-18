@@ -1,4 +1,9 @@
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+} from '@nestjs/common';
 import { ApplicationLogger } from '../shared/infrastructure/services/application-logger/application-logger';
 import { Response } from 'express';
 import { HttpResponse } from '../shared/infrastructure/HttpResponse';
@@ -14,6 +19,12 @@ export class HttpAllErrorsFilter<T> implements ExceptionFilter {
       this.logger.error(error.stack);
     } else {
       this.logger.error(error);
+    }
+
+    if (error instanceof HttpException) {
+      return response
+        .status(error.getStatus())
+        .json(HttpResponse.failure(error.message));
     }
 
     response
