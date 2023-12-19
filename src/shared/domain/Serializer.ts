@@ -3,5 +3,9 @@ export abstract class Serializer {
 }
 
 export function implementsSerializer(value: any): value is Serializer {
-  return 'serialize' in value && typeof value.serialize === 'function';
+  return (
+    typeof value === 'object' &&
+    'serialize' in value &&
+    typeof value.serialize === 'function'
+  );
 }

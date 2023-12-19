@@ -7,6 +7,7 @@ import {
 import { ApplicationLogger } from '../shared/infrastructure/services/application-logger/application-logger';
 import { Response } from 'express';
 import { HttpResponse } from '../shared/infrastructure/HttpResponse';
+import { ValidationError } from 'class-validator';
 
 @Catch()
 export class HttpAllErrorsFilter<T> implements ExceptionFilter {
@@ -22,9 +23,9 @@ export class HttpAllErrorsFilter<T> implements ExceptionFilter {
     }
 
     if (error instanceof HttpException) {
-      return response
-        .status(error.getStatus())
-        .json(HttpResponse.failure(error.message).serialize());
+      const httpResponse = HttpResponse.failure(error.message);
+      httpResponse.withData(error.getResponse());
+      return response.status(error.getStatus()).json(httpResponse.serialize());
     }
 
     response

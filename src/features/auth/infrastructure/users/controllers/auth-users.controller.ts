@@ -6,12 +6,14 @@ import * as Either from 'fp-ts/Either';
 import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse';
 import { UserLogoutRequestDTO } from './DTOs/UserLogoutRequestDTO';
 import { UserLogout } from '../../../application/users/UserLogout';
+import { UserRefresh } from '../../../application/users/UserRefresh';
 
 @Controller('users')
 export class AuthUsersController {
   constructor(
     private userLoginUseCase: UserLogin,
     private userLogoutUseCase: UserLogout,
+    private userRefreshUseCase: UserRefresh
   ) {}
   @Post('login')
   async userLogin(@Body() { email, password }: UserLoginRequestDTO) {
@@ -32,8 +34,11 @@ export class AuthUsersController {
     });
   }
 
-  @Get('refresh')
-  async userRefresh() {}
+  @Post('refresh')
+  async userRefresh(@Body() { token }: UserLogoutRequestDTO) {
+    const accessToken = await this.userRefreshUseCase.run(token);
+    return HttpResponse.success('Token refreshed').withData(accessToken);
+  }
 
   @Delete('logout')
   async userLogout(@Body() { token }: UserLogoutRequestDTO) {

@@ -1,12 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './core/app.module';
 import { ApplicationLogger } from './shared/infrastructure/services/application-logger/application-logger';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpApplicationErrorsFilter } from './core/http-application-errors.filter';
 import { SerializerResponseInterceptorInterceptor } from './core/serializer-response-interceptor.interceptor';
 import { HttpAllErrorsFilter } from './core/http-all-errors.filter';
 import helmet from 'helmet';
 import { EnvironmentService } from './shared/infrastructure/services/environment/environment.service';
+import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -32,7 +33,11 @@ async function bootstrap() {
   app.useGlobalInterceptors(new SerializerResponseInterceptorInterceptor());
 
   // Set validations
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   // Start application and log info
   const port = environment.ENV.PORT;

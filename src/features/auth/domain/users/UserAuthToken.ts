@@ -14,42 +14,28 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
   public static readonly TOKEN_TYPE = 'auth.user';
   payload: AuthTokenPayload<UserAuthTokenPayload>;
   type: string = UserAuthToken.TOKEN_TYPE;
-  private _expirationDate: Date;
 
-  override withId(id: AuthTokenId): UserAuthToken {
-    this._id = id;
-    return this;
-  }
-
-  constructor(data: UserAuthTokenPayload, kind: AuthTokenKind) {
+  protected constructor(data: UserAuthTokenPayload, kind: AuthTokenKind) {
     super();
     this.payload = { data, type: this.type, kind };
-    this._expirationDate = moment().add(6, 'hours').toDate();
   }
 
-  public static createRefreshToken(data: UserAuthTokenPayload) {
-    return new UserAuthToken(data, 'refresh');
-  }
-
-  public static createAccessToken(data: UserAuthTokenPayload) {
-    return new UserAuthToken(data, 'access');
-  }
-
-  prepareSignature(): SignJWT {
-    return new SignJWT(this.payload)
-      .setJti(this.id.value)
-      .setProtectedHeader({ alg: 'HS256' })
-      .setIssuedAt()
-      .setExpirationTime(this.expirationDate);
-  }
+  private _expirationDate!: Date;
 
   public get expirationDate(): Date {
     return this._expirationDate;
   }
 
-  withExpirationDate(expirationDate: Date): UserAuthToken {
-    this._expirationDate = expirationDate;
-    return this;
+  public static createRefreshToken(data: UserAuthTokenPayload) {
+    const expirationDate = moment().add(6, 'hours').toDate();
+    return new UserAuthToken(data, 'refresh').withExpirationDate(
+      expirationDate,
+    );
+  }
+
+  public static createAccessToken(data: UserAuthTokenPayload) {
+    const expirationDate = moment().add(15, 'minutes').toDate();
+    return new UserAuthToken(data, 'access').withExpirationDate(expirationDate);
   }
 
   public static from(payload: AuthTokenPayload<unknown>): UserAuthToken {
@@ -88,5 +74,23 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
     }
 
     return true;
+  }
+
+  override withId(id: AuthTokenId): UserAuthToken {
+    this._id = id;
+    return this;
+  }
+
+  prepareSignature(): SignJWT {
+    return new SignJWT(this.payload)
+      .setJti(this.id.value)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime(this.expirationDate);
+  }
+
+  withExpirationDate(expirationDate: Date): UserAuthToken {
+    this._expirationDate = expirationDate;
+    return this;
   }
 }

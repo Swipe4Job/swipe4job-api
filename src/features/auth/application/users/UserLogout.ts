@@ -3,9 +3,9 @@ import { JWTService } from '../../domain/JWTService';
 import { pipe } from 'fp-ts/function';
 import * as Either from 'fp-ts/Either';
 import { UserAuthToken } from '../../domain/users/UserAuthToken';
-import { ApplicationLogger } from '../../../../shared/infrastructure/services/application-logger/application-logger';
 import { UserAuthTokensRepository } from '../../domain/UserAuthTokensRepository';
 import { ByUserAuthTokenId } from '../../domain/AuthTokenId/ByUserAuthTokenId';
+import { AuthTokenExpired } from '../../domain/AuthTokenExpired';
 
 @Injectable()
 export class UserLogout {
@@ -13,12 +13,16 @@ export class UserLogout {
     private jwtService: JWTService,
     private userAuthTokenRepository: UserAuthTokensRepository,
   ) {}
+
   public async run(jwt: string) {
     const result = await this.jwtService.decode(jwt);
     const token = pipe(
       result,
       Either.match(
         (err) => {
+          if (err instanceof AuthTokenExpired) {
+            // TODO emit event token expired
+          }
           throw err;
         },
         (token) => UserAuthToken.from(token),
