@@ -13,7 +13,7 @@ export class AuthUsersController {
   constructor(
     private userLoginUseCase: UserLogin,
     private userLogoutUseCase: UserLogout,
-    private userRefreshUseCase: UserRefresh
+    private userRefreshUseCase: UserRefresh,
   ) {}
   @Post('login')
   async userLogin(@Body() { email, password }: UserLoginRequestDTO) {
