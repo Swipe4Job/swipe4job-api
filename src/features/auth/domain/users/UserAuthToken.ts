@@ -3,6 +3,7 @@ import { SignJWT } from 'jose';
 import { InvalidTokenPayload } from '../InvalidTokenPayload';
 import moment from 'moment';
 import { AuthTokenId } from '../AuthTokenId/AuthTokenId';
+import { UnexpectedError } from '../../../../shared/domain/ApplicationError/UnexpectedError';
 
 export type UserAuthTokenPayload = {
   id: string;
@@ -36,6 +37,7 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
 
   prepareSignature(): SignJWT {
     return new SignJWT(this.payload)
+      .setJti(this.id.value)
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime(this.expirationDate);
@@ -67,6 +69,11 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
     if (payload.exp) {
       token.withExpirationDate(new Date(payload.exp));
     }
+    if (!payload.jti) {
+      throw new UnexpectedError('JTI not defined');
+    }
+
+    token.withId(new AuthTokenId(payload.jti));
 
     return token;
   }

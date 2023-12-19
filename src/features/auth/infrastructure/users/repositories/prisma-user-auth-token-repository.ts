@@ -6,7 +6,6 @@ import { PersistenceError } from '../../../../../shared/domain/PersistenceError'
 import { PrismaProvider } from '../../../../../shared/infrastructure/services/prisma-client/prisma-provider.service';
 import { PrismaCriteriaService } from '../../../../../shared/infrastructure/services/PrismaCriteria/PrismaCriteriaService';
 import { ApplicationLogger } from '../../../../../shared/infrastructure/services/application-logger/application-logger';
-import { AuthTokenId } from '../../../domain/AuthTokenId/AuthTokenId';
 import { UserAuthTokenNotFound } from '../../../domain/users/UserAuthTokenNotFound';
 import { ByUserAuthTokenId } from '../../../domain/AuthTokenId/ByUserAuthTokenId';
 import { JWTService } from '../../../domain/JWTService';
@@ -36,7 +35,7 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
       mappedCriteria.filters,
     );
     try {
-      await this.prisma.users.delete({
+      await this.prisma.tokens.deleteMany({
         where: filters,
       });
     } catch (err) {
@@ -125,9 +124,7 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
         ),
       );
 
-      tokens.push(
-        UserAuthToken.from(payload).withId(new AuthTokenId(entry.uuid)),
-      );
+      tokens.push(UserAuthToken.from(payload));
     }
 
     return tokens;

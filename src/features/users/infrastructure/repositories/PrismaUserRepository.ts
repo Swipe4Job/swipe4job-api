@@ -39,7 +39,7 @@ export class PrismaUserRepository implements UserRepository {
       mappedCriteria.filters,
     );
     try {
-      await this.prisma.users.delete({
+      await this.prisma.users.deleteMany({
         where: filters,
       });
     } catch (err) {
