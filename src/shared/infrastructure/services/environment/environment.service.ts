@@ -50,6 +50,6 @@ export class EnvironmentService {
       }
     }
 
-    return this._environmentVariables!;
+    return this._environmentVariables;
   }
 }

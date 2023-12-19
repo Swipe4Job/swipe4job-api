@@ -25,7 +25,10 @@ import { ApplicationLogger } from '../../../shared/infrastructure/services/appli
 export class UserContextService {
   // TODO this class seems to not respect Single Responsibility principle
   // In a future may this should be split
-  constructor(private logger: ApplicationLogger, private userRepository: UserRepository) {}
+  constructor(
+    private logger: ApplicationLogger,
+    private userRepository: UserRepository,
+  ) {}
 
   public async searchUsers(
     criteria: UserCriteria,
