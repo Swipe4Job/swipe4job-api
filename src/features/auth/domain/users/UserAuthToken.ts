@@ -5,6 +5,7 @@ import moment from 'moment';
 import { AuthTokenId } from '../AuthTokenId/AuthTokenId';
 
 export type UserAuthTokenPayload = {
+  id: string;
   walletAddress: string;
 };
 
