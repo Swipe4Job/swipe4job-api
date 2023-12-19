@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
-import { UserLogin } from '../../application/users/UserLogin';
+import { UserLogin } from '../../../application/users/UserLogin';
 import { UserLoginRequestDTO } from './DTOs/UserLoginRequestDTO';
 import { pipe } from 'fp-ts/function';
 import * as Either from 'fp-ts/Either';
-import { JWTService } from '../../domain/JWTService';
-import { HttpResponse } from '../../../../shared/infrastructure/HttpResponse';
+import { JWTService } from '../../../domain/JWTService';
+import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse';
 
 @Controller('users')
 export class AuthUsersController {
