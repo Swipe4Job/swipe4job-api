@@ -8,13 +8,19 @@ import { PrismaCriteriaService } from '../../../../../shared/infrastructure/serv
 import { ApplicationLogger } from '../../../../../shared/infrastructure/services/application-logger/application-logger';
 import { AuthTokenId } from '../../../domain/AuthTokenId/AuthTokenId';
 import { UserAuthTokenNotFound } from '../../../domain/users/UserAuthTokenNotFound';
-import { Field, Filter, FilterGroup, Order } from '@zertifier/criteria';
-import { Filters } from '@zertifier/criteria/dist/Filters';
-import { Orders } from '@zertifier/criteria/dist/Orders';
 import { ByUserAuthTokenId } from '../../../domain/AuthTokenId/ByUserAuthTokenId';
 import { JWTService } from '../../../domain/JWTService';
 import * as Either from 'fp-ts/Either';
 import { pipe } from 'fp-ts/function';
+import {
+  FieldMapper,
+  FieldMapping,
+} from '../../../../../shared/domain/Criteria/FieldMapper';
+import { Criteria } from '@zertifier/criteria';
+
+const fieldMapping: FieldMapping = {
+  id: 'uuid',
+};
 
 @Injectable()
 export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
@@ -40,8 +46,7 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
   }
 
   async find(criteria: UserAuthTokenCriteria): Promise<UserAuthToken[]> {
-    const mappedCriteria = this.mapFields(criteria);
-    const tokens = await this.search(mappedCriteria);
+    const tokens = await this.search(criteria);
 
     if (!tokens) {
       throw new UserAuthTokenNotFound();
@@ -51,9 +56,7 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
   }
 
   async save(userAuthToken: UserAuthToken): Promise<void> {
-    const tokens = this.search(
-      this.mapFields(new ByUserAuthTokenId(userAuthToken.id)),
-    );
+    const tokens = await this.search(new ByUserAuthTokenId(userAuthToken.id));
 
     const signedToken = await this.jwtService.sign(userAuthToken);
 
@@ -136,35 +139,7 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
    * @param criteria
    * @private
    */
-  private mapFields(criteria: UserAuthTokenCriteria): UserAuthTokenCriteria {
-    const { filters, orders } = criteria;
-    const groups = filters.groups.map((group) => {
-      const filters = group.filters.map((filter) => {
-        if (filter.field.value === 'id') {
-          return new Filter(new Field('uuid'), filter.operator, filter.operand);
-        }
-        return filter;
-      });
-      return filters.length ? FilterGroup.create(filters) : FilterGroup.EMPTY();
-    });
-    const newFilters = groups.length ? new Filters(groups) : Filters.EMPTY();
-
-    const mappedOrders = orders.orders.map((order) => {
-      if (order.field.value === 'id') {
-        return new Order(new Field('uuid'), order.direction);
-      }
-      return order;
-    });
-
-    const newOrders = mappedOrders.length
-      ? Orders.create(mappedOrders)
-      : Orders.EMPTY();
-
-    return new UserAuthTokenCriteria({
-      filters: newFilters,
-      orders: newOrders,
-      skip: criteria.skip,
-      limit: criteria.limit,
-    });
+  private mapFields(criteria: UserAuthTokenCriteria): Criteria {
+    return FieldMapper.mapCriteria(fieldMapping, criteria);
   }
 }

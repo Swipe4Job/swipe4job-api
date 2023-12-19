@@ -46,7 +46,6 @@ export class UserContextService {
       const criteria = new ByUserEmail(userEmail);
 
       const users = await this.userRepository.find(criteria);
-      this.logger.debug(users);
       const user = users[0];
       if (user.password && !(await user.password.match(password))) {
         return Either.left(new InvalidUserCredentials("Password don't match"));
