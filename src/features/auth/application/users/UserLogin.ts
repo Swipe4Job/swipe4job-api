@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ApplicationLogger } from '../../../../shared/infrastructure/services/application-logger/application-logger';
 import { UserContextService } from '../../../users/domain/UserContextService';
 import {
   UserAuthToken,
@@ -8,10 +7,16 @@ import {
 import { pipe } from 'fp-ts/function';
 import * as Either from 'fp-ts/Either';
 import { ApplicationError } from '../../../../shared/domain/ApplicationError/ApplicationError';
+import { UserAuthTokensRepository } from '../../domain/UserAuthTokensRepository';
+import { JWTService } from '../../domain/JWTService';
 
 @Injectable()
 export class UserLogin {
-  constructor(private userContextService: UserContextService) {}
+  constructor(
+    private userContextService: UserContextService,
+    private userAuthTokenRepository: UserAuthTokensRepository,
+    private jwtService: JWTService,
+  ) {}
 
   async web2(
     user: string,
@@ -19,18 +24,25 @@ export class UserLogin {
   ): Promise<
     Either.Either<
       ApplicationError,
-      { refresh: UserAuthToken; access: UserAuthToken }
+      Promise<{ refresh: string; access: string }>
     >
   > {
     return pipe(
       await this.userContextService.validCredentials(user, password),
-      Either.map((user) => {
-        const authTokenData: UserAuthTokenPayload = { id: user.id.value };
+      Either.map(async (user) => {
+        const authTokenData: UserAuthTokenPayload = {
+          walletAddress: user.id.value,
+        };
         const refresh = UserAuthToken.createRefreshToken(authTokenData);
         const access = UserAuthToken.createAccessToken(authTokenData);
+
+        await this.userAuthTokenRepository.save(refresh);
+        const signedRefreshToken = await this.jwtService.sign(refresh);
+        const signedAccessToken = await this.jwtService.sign(access);
+
         return {
-          refresh,
-          access,
+          refresh: signedRefreshToken,
+          access: signedAccessToken,
         };
       }),
     );

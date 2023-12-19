@@ -7,10 +7,21 @@ import { SharedProvidersModule } from '../../../shared/infrastructure/services/s
 import { UserLogout } from '../application/users/UserLogout';
 import { UserRefresh } from '../application/users/UserRefresh';
 import { PrismaUserAuthTokenRepository } from './users/repositories/prisma-user-auth-token-repository';
+import { UserAuthTokensRepository } from '../domain/UserAuthTokensRepository';
 
 @Module({
   imports: [SharedProvidersModule, UserServicesModule],
-  providers: [JWTService, UserLogin, UserLogout, UserRefresh, PrismaUserAuthTokenRepository],
+  providers: [
+    JWTService,
+    UserLogin,
+    UserLogout,
+    UserRefresh,
+    PrismaUserAuthTokenRepository,
+    {
+      provide: UserAuthTokensRepository,
+      useClass: PrismaUserAuthTokenRepository,
+    },
+  ],
   controllers: [AuthUsersController],
 })
 export class AuthModule {}
