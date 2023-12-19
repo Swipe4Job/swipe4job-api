@@ -74,6 +74,7 @@ export class PrismaUserRepository implements UserRepository {
           wallet_address: user.walletAddress?.value,
           password: user.password?.value,
           disabled: !user.enabled,
+          updated_at: new Date(),
         },
         where: { uuid: user.id.value },
       });
@@ -89,7 +90,7 @@ export class PrismaUserRepository implements UserRepository {
         where: filters,
         orderBy: orders as any,
         skip: criteria.skip.value || undefined,
-        take: criteria.skip.value || undefined,
+        take: criteria.limit.value || undefined,
       });
     } catch (err) {
       this.logger.error(err);

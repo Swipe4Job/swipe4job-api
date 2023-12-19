@@ -1,19 +1,28 @@
 import { AuthToken, AuthTokenKind, AuthTokenPayload } from '../AuthToken';
 import { SignJWT } from 'jose';
 import { InvalidTokenPayload } from '../InvalidTokenPayload';
+import moment from 'moment';
+import { AuthTokenId } from '../AuthTokenId/AuthTokenId';
 
 export type UserAuthTokenPayload = {
-  id: string;
+  walletAddress: string;
 };
 
 export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
   public static readonly TOKEN_TYPE = 'auth.user';
   payload: AuthTokenPayload<UserAuthTokenPayload>;
   type: string = UserAuthToken.TOKEN_TYPE;
+  private _expirationDate: Date;
+
+  override withId(id: AuthTokenId): UserAuthToken {
+    this._id = id;
+    return this;
+  }
 
   constructor(data: UserAuthTokenPayload, kind: AuthTokenKind) {
     super();
     this.payload = { data, type: this.type, kind };
+    this._expirationDate = moment().add(6, 'hours').toDate();
   }
 
   public static createRefreshToken(data: UserAuthTokenPayload) {
@@ -28,7 +37,16 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
     return new SignJWT(this.payload)
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
-      .setExpirationTime('6h');
+      .setExpirationTime(this.expirationDate);
+  }
+
+  public get expirationDate(): Date {
+    return this._expirationDate;
+  }
+
+  withExpirationDate(expirationDate: Date): UserAuthToken {
+    this._expirationDate = expirationDate;
+    return this;
   }
 
   public static from(payload: AuthTokenPayload<unknown>): UserAuthToken {
@@ -44,7 +62,12 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
       );
     }
 
-    return new UserAuthToken(payload.data, payload.kind);
+    const token = new UserAuthToken(payload.data, payload.kind);
+    if (payload.exp) {
+      token.withExpirationDate(new Date(payload.exp));
+    }
+
+    return token;
   }
 
   private static isValidData(value: unknown): value is UserAuthTokenPayload {

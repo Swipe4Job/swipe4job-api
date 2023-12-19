@@ -11,10 +11,7 @@ import { ApplicationError } from '../../../../shared/domain/ApplicationError/App
 
 @Injectable()
 export class UserLogin {
-  constructor(
-    private logger: ApplicationLogger,
-    private userContextService: UserContextService,
-  ) {}
+  constructor(private userContextService: UserContextService) {}
 
   async web2(
     user: string,
