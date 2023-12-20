@@ -1,4 +1,4 @@
-import { AuthToken, AuthTokenKind, AuthTokenPayload } from '../AuthToken';
+import { AuthToken, AuthTokenType, AuthTokenPayload } from '../AuthToken';
 import { SignJWT } from 'jose';
 import { InvalidTokenPayload } from '../InvalidTokenPayload';
 import moment from 'moment';
@@ -11,13 +11,13 @@ export type UserAuthTokenPayload = {
 };
 
 export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
-  public static readonly TOKEN_TYPE = 'auth.user';
+  public static readonly TOKEN_KIND = 'auth.user';
   payload: AuthTokenPayload<UserAuthTokenPayload>;
-  type: string = UserAuthToken.TOKEN_TYPE;
+  type: string = UserAuthToken.TOKEN_KIND;
 
-  protected constructor(data: UserAuthTokenPayload, kind: AuthTokenKind) {
+  protected constructor(data: UserAuthTokenPayload, kind: AuthTokenType) {
     super();
-    this.payload = { data, type: this.type, kind };
+    this.payload = { data, kind: this.type, type: kind };
   }
 
   private _expirationDate!: Date;
@@ -39,7 +39,7 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
   }
 
   public static from(payload: AuthTokenPayload<unknown>): UserAuthToken {
-    if (payload.type !== UserAuthToken.TOKEN_TYPE) {
+    if (payload.kind !== UserAuthToken.TOKEN_KIND) {
       throw new InvalidTokenPayload(
         'Invalid user auth token payload. Mismatched type',
       );
@@ -51,7 +51,7 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
       );
     }
 
-    const token = new UserAuthToken(payload.data, payload.kind);
+    const token = new UserAuthToken(payload.data, payload.type);
     if (payload.exp) {
       token.withExpirationDate(new Date(payload.exp));
     }

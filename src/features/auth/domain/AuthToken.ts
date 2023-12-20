@@ -1,11 +1,11 @@
 import { JWTPayload, SignJWT } from 'jose';
 import { AuthTokenId } from './AuthTokenId/AuthTokenId';
 
-export type AuthTokenKind = 'access' | 'refresh';
+export type AuthTokenType = 'access' | 'refresh';
 
 export interface AuthTokenPayload<T> extends JWTPayload {
-  readonly kind: AuthTokenKind;
-  readonly type: string;
+  readonly type: AuthTokenType;
+  readonly kind: string;
   readonly data: T;
 }
 
