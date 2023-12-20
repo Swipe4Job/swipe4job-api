@@ -16,7 +16,7 @@ export class UserRefresh {
     private userContextService: UserContextService,
   ) {}
   public async run(jwt: string) {
-    const result = await this.jwtService.decode(jwt);
+    const result = await this.jwtService.verify(jwt);
     const token = pipe(
       result,
       Either.match(

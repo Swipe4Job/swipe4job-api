@@ -31,7 +31,7 @@ export class JWTService {
     return authToken.prepareSignature().sign(this.jwtSecret);
   }
 
-  async decode(
+  async verify(
     jwt: string,
   ): Promise<Either.Either<JwtError, AuthTokenPayload<unknown>>> {
     try {

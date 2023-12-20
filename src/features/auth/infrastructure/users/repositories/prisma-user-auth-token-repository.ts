@@ -113,7 +113,7 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
 
     const tokens: UserAuthToken[] = [];
     for (const entry of result) {
-      const result = await this.jwtService.decode(entry.token);
+      const result = await this.jwtService.verify(entry.token);
       const payload = pipe(
         result,
         Either.match(
