@@ -3,13 +3,9 @@ import {
   IsEthereumAddress,
   IsOptional,
   IsString,
-  IsUUID,
 } from 'class-validator';
 
 export class UserRegisterRequestDTO {
-  @IsUUID()
-  id!: string;
-
   @IsString()
   name!: string;
 

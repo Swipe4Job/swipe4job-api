@@ -19,6 +19,7 @@ import { PhoneNumber } from '../domain/PhoneNumber/PhoneNumber';
 import { WalletAddress } from '../../../shared/domain/WalletAddress/WalletAddress';
 import { UserRole } from '../domain/UserRole';
 import { UserPassword } from '../domain/UserPassword';
+import { ByUserEmail } from '../domain/UserEmail/ByUserEmail';
 
 @Injectable()
 export class UserRegister {
@@ -28,12 +29,11 @@ export class UserRegister {
     name: string;
     email: string;
     walletAddress?: string;
-    id: string;
     phoneNumber: string;
     password?: string;
   }) {
     const user = new User({
-      id: new UserId(params.id),
+      id: UserId.random(),
       name: new UserName(params.name),
       email: new UserEmail(params.email),
       phoneNumber: new PhoneNumber(params.phoneNumber),
@@ -46,28 +46,7 @@ export class UserRegister {
         : undefined,
     });
     // Searching users by email or id
-    const users = await this.userRepository.search(
-      new UserCriteria({
-        filters: new Filters([
-          FilterGroup.create([
-            new Filter(
-              new Field('id'),
-              Operator.from(Operators.EQUAL),
-              new Operand(user.id.value),
-            ),
-          ]),
-          FilterGroup.create([
-            new Filter(
-              new Field('email'),
-              Operator.from(Operators.EQUAL),
-              new Operand(user.email.value),
-            ),
-          ]),
-        ]),
-        orders: Orders.EMPTY(),
-      }),
-    );
-    // TODO check if client has permissions
+    const users = await this.userRepository.search(new ByUserEmail(user.email));
     if (users) {
       // Cannot register new user
       throw new UserAlreadyRegistered();
