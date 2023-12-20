@@ -33,6 +33,7 @@ export class UserLogin {
         const authTokenData: UserAuthTokenPayload = {
           userID: user.id.value,
           walletAddress: user.walletAddress?.value || '',
+          role: user.role.value,
         };
         const refresh = UserAuthToken.createRefreshToken(authTokenData);
         const access = UserAuthToken.createAccessToken(authTokenData);

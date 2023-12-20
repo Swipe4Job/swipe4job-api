@@ -30,10 +30,12 @@ export class UserRefresh {
       ),
     );
     const users = await this.userContextService.searchUsers(
-      new ByUserID(new UserId(token.payload.data.id)),
+      new ByUserID(new UserId(token.payload.data.userID)),
     );
     if (!users) {
-      throw new UserNotFound(`User with id ${token.payload.data.id} not found`);
+      throw new UserNotFound(
+        `User with id ${token.payload.data.userID} not found`,
+      );
     }
 
     const accessToken = UserAuthToken.createAccessToken(token.payload.data);
