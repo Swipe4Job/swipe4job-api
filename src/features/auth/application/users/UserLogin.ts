@@ -31,7 +31,7 @@ export class UserLogin {
       await this.userContextService.validCredentials(user, password),
       Either.map(async (user) => {
         const authTokenData: UserAuthTokenPayload = {
-          id: user.id.value,
+          userID: user.id.value,
           walletAddress: user.walletAddress?.value || '',
         };
         const refresh = UserAuthToken.createRefreshToken(authTokenData);

@@ -6,8 +6,9 @@ import { AuthTokenId } from '../AuthTokenId/AuthTokenId';
 import { UnexpectedError } from '../../../../shared/domain/ApplicationError/UnexpectedError';
 
 export type UserAuthTokenPayload = {
-  id: string;
+  userID: string;
   walletAddress: string;
+  role: string;
 };
 
 export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
