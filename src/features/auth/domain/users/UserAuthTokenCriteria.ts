@@ -3,23 +3,9 @@ import { Filters } from '@zertifier/criteria/dist/Filters';
 import { Orders } from '@zertifier/criteria/dist/Orders';
 import { FieldValidator } from '../../../../shared/domain/Criteria/FieldValidator';
 
-export class UserCriteria extends Criteria {
-  private allowedFilterFields = [
-    'username',
-    'email',
-    'walletAddress',
-    'phoneNumber',
-    'id',
-    'role',
-  ];
-  private allowedOrderFields = [
-    'username',
-    'email',
-    'walletAddress',
-    'phoneNumber',
-    'id',
-    'role',
-  ];
+export class UserAuthTokenCriteria extends Criteria {
+  private allowedFilterFields = ['id', 'expirationDate'];
+  private allowedOrderFields = ['id', 'expirationDate'];
 
   constructor(params: {
     filters: Filters;
@@ -34,8 +20,8 @@ export class UserCriteria extends Criteria {
     FieldValidator.hasValidOrders(orders, this.allowedOrderFields);
   }
 
-  public static override NONE(): UserCriteria {
-    return new UserCriteria({
+  public static override NONE(): UserAuthTokenCriteria {
+    return new UserAuthTokenCriteria({
       filters: Filters.EMPTY(),
       orders: Orders.EMPTY(),
     });

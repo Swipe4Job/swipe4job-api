@@ -7,7 +7,7 @@ import { SharedProvidersModule } from '../../../shared/infrastructure/services/s
 import { UserLogout } from '../application/users/UserLogout';
 import { UserRefresh } from '../application/users/UserRefresh';
 import { PrismaUserAuthTokenRepository } from './users/repositories/prisma-user-auth-token-repository';
-import { UserAuthTokensRepository } from '../domain/UserAuthTokensRepository';
+import { UserAuthTokensRepository } from '../domain/users/UserAuthTokensRepository';
 import { RootController } from './root/root.controller';
 import { VerifyAuthToken } from '../application/VerifyAuthToken';
 
