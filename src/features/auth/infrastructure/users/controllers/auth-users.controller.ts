@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Post } from '@nestjs/common';
 import { UserLogin } from '../../../application/users/UserLogin';
 import { UserLoginRequestDTO } from './DTOs/UserLoginRequestDTO';
 import { pipe } from 'fp-ts/function';
