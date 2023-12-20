@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { UserAuthTokensRepository } from '../../../domain/UserAuthTokensRepository';
-import { UserAuthTokenCriteria } from '../../../domain/UserAuthTokenCriteria';
+import { UserAuthTokensRepository } from '../../../domain/users/UserAuthTokensRepository';
+import { UserAuthTokenCriteria } from '../../../domain/users/UserAuthTokenCriteria';
 import { UserAuthToken } from '../../../domain/users/UserAuthToken';
 import { PersistenceError } from '../../../../../shared/domain/PersistenceError';
 import { PrismaProvider } from '../../../../../shared/infrastructure/services/prisma-client/prisma-provider.service';

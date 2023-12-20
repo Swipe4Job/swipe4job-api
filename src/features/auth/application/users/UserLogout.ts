@@ -3,7 +3,7 @@ import { JWTService } from '../../domain/JWTService';
 import { pipe } from 'fp-ts/function';
 import * as Either from 'fp-ts/Either';
 import { UserAuthToken } from '../../domain/users/UserAuthToken';
-import { UserAuthTokensRepository } from '../../domain/UserAuthTokensRepository';
+import { UserAuthTokensRepository } from '../../domain/users/UserAuthTokensRepository';
 import { ByUserAuthTokenId } from '../../domain/AuthTokenId/ByUserAuthTokenId';
 import { AuthTokenExpired } from '../../domain/AuthTokenExpired';
 

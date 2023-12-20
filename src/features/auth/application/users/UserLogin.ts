@@ -7,7 +7,7 @@ import {
 import { pipe } from 'fp-ts/function';
 import * as Either from 'fp-ts/Either';
 import { ApplicationError } from '../../../../shared/domain/ApplicationError/ApplicationError';
-import { UserAuthTokensRepository } from '../../domain/UserAuthTokensRepository';
+import { UserAuthTokensRepository } from '../../domain/users/UserAuthTokensRepository';
 import { JWTService } from '../../domain/JWTService';
 
 @Injectable()

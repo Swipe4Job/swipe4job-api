@@ -1,4 +1,4 @@
-import { UserAuthToken } from './users/UserAuthToken';
+import { UserAuthToken } from './UserAuthToken';
 import { UserAuthTokenCriteria } from './UserAuthTokenCriteria';
 
 export abstract class UserAuthTokensRepository {

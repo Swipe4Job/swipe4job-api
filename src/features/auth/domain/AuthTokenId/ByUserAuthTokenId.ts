@@ -1,4 +1,4 @@
-import { UserAuthTokenCriteria } from '../UserAuthTokenCriteria';
+import { UserAuthTokenCriteria } from '../users/UserAuthTokenCriteria';
 import {
   Field,
   Filter,
