@@ -7,13 +7,15 @@ import { SerializerResponseInterceptorInterceptor } from './core/serializer-resp
 import { HttpAllErrorsFilter } from './core/http-all-errors.filter';
 import helmet from 'helmet';
 import { EnvironmentService } from './shared/infrastructure/services/environment/environment.service';
-import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
 
+  app.enableCors({
+    origin: ['https://zertiair-app.zertifier.com'],
+  });
   app.use(helmet());
 
   // Set app logger
