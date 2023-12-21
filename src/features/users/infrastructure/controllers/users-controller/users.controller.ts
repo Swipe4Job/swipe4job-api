@@ -15,7 +15,9 @@ export class UsersController {
   @Get()
   async getUsers() {
     const users = await ListUsers.run(this.userRepository, UserCriteria.NONE());
-    return HttpResponse.success('Users fetched successfully').withData(users);
+    return HttpResponse.success('Users fetched successfully').withData(
+      users.map((user) => user.serialize()),
+    );
   }
 
   @Post('register')

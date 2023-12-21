@@ -5,8 +5,21 @@ import { UserEmail } from './UserEmail/UserEmail';
 import { UserRole } from './UserRole';
 import { PhoneNumber } from './PhoneNumber/PhoneNumber';
 import { UserPassword } from './UserPassword';
+import { Serializer } from '../../../shared/domain/Serializer';
 
-export class User {
+export class User implements Serializer {
+  serialize(): object {
+    return {
+      id: this.id.value,
+      name: this.name.value,
+      walletAddress: this.walletAddress?.value,
+      email: this.email.value,
+      role: this.role.value,
+      password: this.password?.value,
+      phoneNumber: this.phoneNumber.value,
+      enabled: this.enabled,
+    };
+  }
   constructor(params: {
     id: UserId;
     name: UserName;
