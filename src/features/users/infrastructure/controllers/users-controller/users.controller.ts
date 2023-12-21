@@ -5,6 +5,7 @@ import { UserCriteria } from '../../../domain/UserRepository/UserCriteria';
 import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse';
 import { UserRegisterRequestDTO } from '../DTOs/UserRegisterRequestDTO';
 import { UserRegister } from '../../../application/UserRegister';
+import { UsersListResponseDTO } from '../DTOs/UsersListResponseDTO';
 
 @Controller('users')
 export class UsersController {
@@ -16,7 +17,7 @@ export class UsersController {
   async getUsers() {
     const users = await ListUsers.run(this.userRepository, UserCriteria.NONE());
     return HttpResponse.success('Users fetched successfully').withData(
-      users.map((user) => user.serialize()),
+      users.map((user) => new UsersListResponseDTO(user)),
     );
   }
 

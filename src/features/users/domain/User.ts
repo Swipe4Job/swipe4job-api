@@ -8,7 +8,7 @@ import { UserPassword } from './UserPassword';
 import { Serializer } from '../../../shared/domain/Serializer';
 
 export class User implements Serializer {
-  serialize(): object {
+  serialize() {
     return {
       id: this.id.value,
       name: this.name.value,
