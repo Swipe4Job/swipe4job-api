@@ -7,6 +7,7 @@ export interface EnvironmentVariables {
   DATABASE_URL: string;
   PORT: number;
   JWT_SECRET: string;
+  ENVIRONMENT: string;
 }
 
 @Injectable()
@@ -16,6 +17,7 @@ export class EnvironmentService {
     DATABASE_URL: '',
     PORT: 3000,
     JWT_SECRET: '',
+    ENVIRONMENT: 'production',
   };
 
   public get ENV(): EnvironmentVariables {
