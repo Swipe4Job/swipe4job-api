@@ -29,9 +29,9 @@ describe('CriteriaCodec', () => {
       filters: new Filters([
         FilterGroup.create([
           new Filter(
-            new Field('id'),
+            new Field('name'),
             Operator.from(Operators.EQUAL),
-            new Operand(2),
+            new Operand('Alejandro Marin'),
           ),
         ]),
       ]),
@@ -42,7 +42,8 @@ describe('CriteriaCodec', () => {
     const encodedCriteria = codecService.encode(criteria);
     expect(typeof encodedCriteria).toBe('string');
     const decodedCriteria = codecService.decode(encodedCriteria);
-
     expect(decodedCriteria.equals(criteria)).toBe(true);
+
+    console.log(encodedCriteria);
   });
 });

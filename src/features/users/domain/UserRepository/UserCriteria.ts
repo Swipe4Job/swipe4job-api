@@ -5,7 +5,7 @@ import { FieldValidator } from '../../../../shared/domain/Criteria/FieldValidato
 
 export class UserCriteria extends Criteria {
   private allowedFilterFields = [
-    'username',
+    'name',
     'email',
     'walletAddress',
     'phoneNumber',
@@ -13,7 +13,7 @@ export class UserCriteria extends Criteria {
     'role',
   ];
   private allowedOrderFields = [
-    'username',
+    'name',
     'email',
     'walletAddress',
     'phoneNumber',
@@ -32,6 +32,10 @@ export class UserCriteria extends Criteria {
     const { filters, orders } = params;
     FieldValidator.hasValidFilters(filters, this.allowedFilterFields);
     FieldValidator.hasValidOrders(orders, this.allowedOrderFields);
+  }
+
+  public static fromCriteria(criteria: Criteria) {
+    return new UserCriteria(criteria);
   }
 
   public static override NONE(): UserCriteria {
