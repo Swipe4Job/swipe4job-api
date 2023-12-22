@@ -1,3 +1,3 @@
-import { UUIDValueObject } from '../../../shared/domain/ValueObject/UUIDValueObject';
+import { UIntegerValueObject } from '../../../shared/domain/ValueObject/UIntegerValueObject';
 
-export class ProvinceId extends UUIDValueObject {}
+export class ProvinceId extends UIntegerValueObject {}

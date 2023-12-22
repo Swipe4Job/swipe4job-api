@@ -23,7 +23,7 @@ export class HttpResponse implements Serializer {
     return new HttpResponse(message, true);
   }
 
-  public static failure(message: string): HttpResponse {
+  public static failure(message: string, errorCode: ErrorCode): HttpResponse {
     return new HttpResponse(message, false);
   }
 
@@ -36,7 +36,7 @@ export class HttpResponse implements Serializer {
     return this;
   }
 
-  serialize(): object {
+  serialize() {
     return {
       success: this.success,
       message: this.message,

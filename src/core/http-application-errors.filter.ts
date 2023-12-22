@@ -20,6 +20,6 @@ export class HttpApplicationErrorsFilter implements ExceptionFilter {
     const statusCode = ErrorCodeMapper.toHttpStatusCode(error.errorCode);
     response
       .status(statusCode)
-      .json(HttpResponse.failure(error.message).serialize());
+      .json(HttpResponse.failure(error.message, error.errorCode).serialize());
   }
 }

@@ -24,10 +24,11 @@ export class PrismaCitiesRepository implements CitiesRepository {
       // Create new city
       await this.prisma.municipalities.create({
         data: {
-          id: city.id.value,
+          uuid: city.id.value,
           name: city.name.value,
           coordinates: JSON.stringify(city.coordinates.value),
-          province_id: city.id.value,
+          province_id: city.provinceId.value,
+          ine_code: city.ineCode.value,
         },
       });
     }

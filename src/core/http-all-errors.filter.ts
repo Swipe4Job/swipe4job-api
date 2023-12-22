@@ -7,7 +7,7 @@ import {
 import { ApplicationLogger } from '../shared/infrastructure/services/application-logger/application-logger';
 import { Response } from 'express';
 import { HttpResponse } from '../shared/infrastructure/HttpResponse';
-import { ValidationError } from 'class-validator';
+import { ErrorCode } from '../shared/domain/ApplicationError/ErrorCode';
 
 @Catch()
 export class HttpAllErrorsFilter<T> implements ExceptionFilter {
@@ -23,13 +23,21 @@ export class HttpAllErrorsFilter<T> implements ExceptionFilter {
     }
 
     if (error instanceof HttpException) {
-      const httpResponse = HttpResponse.failure(error.message);
+      const httpResponse = HttpResponse.failure(
+        error.message,
+        ErrorCode.BAD_REQUEST,
+      );
       httpResponse.withData(error.getResponse());
       return response.status(error.getStatus()).json(httpResponse.serialize());
     }
 
     response
       .status(500)
-      .json(HttpResponse.failure('Internal error').serialize());
+      .json(
+        HttpResponse.failure(
+          'Internal error',
+          ErrorCode.INTERNAL_ERROR,
+        ).serialize(),
+      );
   }
 }
