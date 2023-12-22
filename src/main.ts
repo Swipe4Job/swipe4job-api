@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './core/app.module';
 import { ApplicationLogger } from './shared/infrastructure/services/application-logger/application-logger';
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { HttpApplicationErrorsFilter } from './core/http-application-errors.filter';
 import { SerializerResponseInterceptorInterceptor } from './core/serializer-response-interceptor.interceptor';
 import { HttpAllErrorsFilter } from './core/http-all-errors.filter';
