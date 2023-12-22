@@ -24,7 +24,7 @@ export class HttpResponse implements Serializer {
   }
 
   public static failure(message: string, errorCode: ErrorCode): HttpResponse {
-    return new HttpResponse(message, false);
+    return new HttpResponse(message, false).withErrorCode(errorCode);
   }
 
   withData(data: unknown): HttpResponse {
@@ -33,6 +33,11 @@ export class HttpResponse implements Serializer {
       return this;
     }
     this._data = data;
+    return this;
+  }
+
+  withErrorCode(errorCode: ErrorCode): HttpResponse {
+    this._errorCode = errorCode;
     return this;
   }
 
