@@ -15,7 +15,7 @@ export class PrismaCriteriaService {
       const convertedFilters = group.filters.map(this.convertFilter);
       return { AND: convertedFilters };
     });
-    return { OR: convertedGroups };
+    return convertedGroups.length !== 0 ? { OR: convertedGroups } : undefined;
   }
 
   convertOrders(orders: Orders): { [field: string]: 'desc' | 'asc' }[] {

@@ -10,5 +10,9 @@
   "JWT_SECRET": {
     "type": "string",
     "required": true
+  },
+  "ENVIRONMENT": {
+    "type": "string",
+    "required": false
   }
 }

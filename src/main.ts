@@ -7,20 +7,28 @@ import { SerializerResponseInterceptorInterceptor } from './core/serializer-resp
 import { HttpAllErrorsFilter } from './core/http-all-errors.filter';
 import helmet from 'helmet';
 import { EnvironmentService } from './shared/infrastructure/services/environment/environment.service';
-import { ValidationError } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
 
-  app.use(helmet());
+
 
   // Set app logger
   const logger = app.get(ApplicationLogger);
   app.useLogger(logger);
-
   const environment = app.get(EnvironmentService);
+
+  const allowedOrigins = ['https://zertiair-app.zertifier.com'];
+  if (environment.ENV.ENVIRONMENT === 'development') {
+    allowedOrigins.push('http://localhost:4200')
+  }
+  app.enableCors({
+    origin: allowedOrigins,
+  });
+  app.use(helmet());
+
 
   // Note the order of the filters is important
   // the filters are saved in a stack. That means that
