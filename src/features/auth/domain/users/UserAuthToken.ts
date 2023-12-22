@@ -35,7 +35,8 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
   }
 
   public static createAccessToken(data: UserAuthTokenPayload) {
-    const expirationDate = moment().add(15, 'minutes').toDate();
+    // TODO change to 15 minutes when refresh token is implemented on frontend
+    const expirationDate = moment().add(6, 'hours').toDate();
     return new UserAuthToken(data, 'access').withExpirationDate(expirationDate);
   }
 
