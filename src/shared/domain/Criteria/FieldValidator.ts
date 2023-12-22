@@ -23,6 +23,7 @@ export class FieldValidator {
     for (const field of orderFields) {
       if (!fields.includes(field)) {
         throw new InvalidOrderField(
+
           `Invalid order field. Allowed fields: [${fields.join(
             ', ',
           )}]`,

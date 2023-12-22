@@ -27,6 +27,7 @@ model config {
 
 model municipalities {
   id            Int             @id @default(autoincrement())
+  uuid          String          @unique
   name          String          @default("") @db.VarChar(100)
   ine_code      String          @db.VarChar(100)
   coordinates   String          @default("") @db.LongText
