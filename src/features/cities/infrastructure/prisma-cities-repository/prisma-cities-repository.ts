@@ -7,8 +7,7 @@ import { ByCityId } from '../../domain/ByCityId';
 
 @Injectable()
 export class PrismaCitiesRepository implements CitiesRepository {
-  constructor(private prisma: PrismaProvider) {
-  }
+  constructor(private prisma: PrismaProvider) {}
   delete(city: City): Promise<void> {
     return Promise.resolve(undefined);
   }
@@ -29,7 +28,7 @@ export class PrismaCitiesRepository implements CitiesRepository {
           name: city.name.value,
           coordinates: JSON.stringify(city.coordinates.value),
           province_id: city.id.value,
-        }
+        },
       });
     }
   }

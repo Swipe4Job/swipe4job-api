@@ -4,6 +4,6 @@ import { PrismaCitiesRepository } from './prisma-cities-repository/prisma-cities
 
 @Module({
   controllers: [CitiesController],
-  providers: [PrismaCitiesRepository]
+  providers: [PrismaCitiesRepository],
 })
 export class CitiesModule {}

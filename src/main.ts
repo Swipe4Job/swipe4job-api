@@ -13,8 +13,6 @@ async function bootstrap() {
     bufferLogs: true,
   });
 
-
-
   // Set app logger
   const logger = app.get(ApplicationLogger);
   app.useLogger(logger);
@@ -22,13 +20,12 @@ async function bootstrap() {
 
   const allowedOrigins = ['https://zertiair-app.zertifier.com'];
   if (environment.ENV.ENVIRONMENT === 'development') {
-    allowedOrigins.push('http://localhost:4200')
+    allowedOrigins.push('http://localhost:4200');
   }
   app.enableCors({
     origin: allowedOrigins,
   });
   app.use(helmet());
-
 
   // Note the order of the filters is important
   // the filters are saved in a stack. That means that

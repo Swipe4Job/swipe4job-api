@@ -1,7 +1,4 @@
 export class AddCities {
-  constructor() {
-  }
-  public async run() {
-
-  }
+  constructor() {}
+  public async run() {}
 }
