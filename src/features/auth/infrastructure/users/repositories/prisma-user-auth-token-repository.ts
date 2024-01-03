@@ -29,6 +29,7 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
     private jwtService: JWTService,
     private logger: ApplicationLogger,
   ) {}
+
   async delete(criteria: UserAuthTokenCriteria): Promise<void> {
     const mappedCriteria = this.mapFields(criteria);
     const filters = this.prismaCriteriaService.convertFilters(
@@ -59,29 +60,33 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
 
     const signedToken = await this.jwtService.sign(userAuthToken);
 
-    if (!tokens) {
-      await this.prisma.tokens.create({
+    try {
+      if (!tokens) {
+        await this.prisma.tokens.create({
+          data: {
+            uuid: userAuthToken.id.value,
+            wallet_address: userAuthToken.payload.data.walletAddress,
+            expiration_date: userAuthToken.expirationDate,
+            token: signedToken,
+          },
+        });
+        return;
+      }
+      await this.prisma.tokens.update({
         data: {
-          uuid: userAuthToken.id.value,
           wallet_address: userAuthToken.payload.data.walletAddress,
           expiration_date: userAuthToken.expirationDate,
           token: signedToken,
+          updated_at: new Date(),
+        },
+        where: {
+          uuid: userAuthToken.id.value,
         },
       });
-      return;
+    } catch (err) {
+      this.logger.error(err);
+      throw new PersistenceError('Error saving user auth token');
     }
-    await this.prisma.tokens.update({
-      data: {
-        uuid: userAuthToken.id.value,
-        wallet_address: userAuthToken.payload.data.walletAddress,
-        expiration_date: userAuthToken.expirationDate,
-        token: signedToken,
-        updated_at: new Date(),
-      },
-      where: {
-        uuid: userAuthToken.id.value,
-      },
-    });
   }
 
   async search(
@@ -107,7 +112,7 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
       throw new PersistenceError('Error getting user tokens from database');
     }
 
-    if (result.length == 0) {
+    if (result.length === 0) {
       return;
     }
 

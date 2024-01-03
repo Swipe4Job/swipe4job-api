@@ -7,6 +7,7 @@ import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse'
 import { UserLogoutRequestDTO } from './DTOs/UserLogoutRequestDTO';
 import { UserLogout } from '../../../application/users/UserLogout';
 import { UserRefresh } from '../../../application/users/UserRefresh';
+import { UserWeb3LoginDTO } from './DTOs/UserWeb3LoginDTO';
 
 @Controller('users')
 export class AuthUsersController {
@@ -15,6 +16,15 @@ export class AuthUsersController {
     private userLogoutUseCase: UserLogout,
     private userRefreshUseCase: UserRefresh,
   ) {}
+
+  @Post('sign-code')
+  async requestSignCode() {}
+
+  @Post('w3-login')
+  async web3UserLogin(@Body() { walletAddress, signature }: UserWeb3LoginDTO) {
+
+  }
+
   @Post('login')
   async userLogin(@Body() { email, password }: UserLoginRequestDTO) {
     const result = await this.userLoginUseCase.web2(email, password);
