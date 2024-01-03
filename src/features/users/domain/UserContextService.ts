@@ -36,6 +36,10 @@ export class UserContextService {
     return this.userRepository.search(criteria);
   }
 
+  public async findUsers(criteria: UserCriteria): Promise<User[]> {
+    return this.userRepository.find(criteria);
+  }
+
   public async validCredentials(
     email: string,
     password: string,

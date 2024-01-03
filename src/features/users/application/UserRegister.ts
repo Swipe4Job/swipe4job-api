@@ -1,16 +1,6 @@
 import { UserRepository } from '../domain/UserRepository/UserRepository';
 import { Injectable } from '@nestjs/common';
 import { UserAlreadyRegistered } from '../domain/UserAlreadyRegistered';
-import { UserCriteria } from '../domain/UserRepository/UserCriteria';
-import { Orders } from '@zertifier/criteria/dist/Orders';
-import { Filters, Operators } from '@zertifier/criteria/dist/Filters';
-import {
-  Field,
-  Filter,
-  FilterGroup,
-  Operand,
-  Operator,
-} from '@zertifier/criteria';
 import { User } from '../domain/User';
 import { UserId } from '../domain/UserID/UserId';
 import { UserName } from '../domain/UserName';
@@ -19,7 +9,17 @@ import { PhoneNumber } from '../domain/PhoneNumber/PhoneNumber';
 import { WalletAddress } from '../../../shared/domain/WalletAddress/WalletAddress';
 import { UserRole } from '../domain/UserRole';
 import { UserPassword } from '../domain/UserPassword';
-import { ByUserEmail } from '../domain/UserEmail/ByUserEmail';
+import { UserCriteria } from '../domain/UserRepository/UserCriteria';
+import {
+  Field,
+  Filter,
+  FilterGroup,
+  Filters,
+  Operand,
+  Operator,
+  Operators,
+  Orders,
+} from '@zertifier/criteria';
 
 @Injectable()
 export class UserRegister {
@@ -45,8 +45,17 @@ export class UserRegister {
         ? await UserPassword.create(params.password)
         : undefined,
     });
-    // Searching users by email or id
-    const users = await this.userRepository.search(new ByUserEmail(user.email));
+    // Searching enabled users by id
+    const criteria = new UserCriteria({
+      filters: Filters.create([
+        FilterGroup.create([
+          Filter.create('email', Operators.EQUAL, user.email.value),
+          Filter.create('disabled', Operators.EQUAL, false),
+        ]),
+      ]),
+      orders: Orders.EMPTY(),
+    });
+    const users = await this.userRepository.search(criteria);
     if (users) {
       // Cannot register new user
       throw new UserAlreadyRegistered();

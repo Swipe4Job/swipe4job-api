@@ -1,12 +1,9 @@
 import { UserCriteria } from '../UserRepository/UserCriteria';
 import { UserId } from './UserId';
 import {
-  Field,
   Filter,
   FilterGroup,
   Filters,
-  Operand,
-  Operator,
   Operators,
   Orders,
 } from '@zertifier/criteria';
@@ -16,11 +13,7 @@ export class ByUserID extends UserCriteria {
     super({
       filters: new Filters([
         FilterGroup.create([
-          new Filter(
-            new Field('id'),
-            Operator.from(Operators.EQUAL),
-            new Operand(userId.value),
-          ),
+          Filter.create('id', Operators.EQUAL, userId.value),
         ]),
       ]),
       orders: Orders.EMPTY(),
