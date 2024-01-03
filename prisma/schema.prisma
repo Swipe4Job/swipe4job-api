@@ -209,3 +209,9 @@ model transactions {
   state               String
   sensor_data_entries sensor_data[]
 }
+
+model web3_requests {
+  id             String @id
+  wallet_address String
+  sign_code      String
+}
