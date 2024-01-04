@@ -44,7 +44,7 @@ export class PrismaWeb3LoginRequestsRepository
   }
 
   async save(request: Web3LoginRequest): Promise<void> {
-    const requests = this.search(new ByWeb3LoginRequestId(request.id));
+    const requests = await this.search(new ByWeb3LoginRequestId(request.id));
 
     try {
       if (!requests) {

@@ -4,8 +4,8 @@ import { Criteria, Limit, Skip } from '@zertifier/criteria';
 import { FieldValidator } from '../../../../shared/domain/Criteria/FieldValidator';
 
 export class Web3LoginRequestCriteria extends Criteria {
-  private allowedFilterFields = [];
-  private allowedOrderFields = [];
+  private allowedFilterFields = ['id', 'wallet_address'];
+  private allowedOrderFields = ['id', 'wallet_address'];
 
   constructor(params: {
     filters: Filters;

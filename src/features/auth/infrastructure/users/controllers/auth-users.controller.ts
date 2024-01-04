@@ -24,7 +24,7 @@ export class AuthUsersController {
   async requestSignCode(@Body() { walletAddress }: UserWeb3GetSignCodeDTO) {
     const request = await this.userGetSignCode.run(walletAddress);
     return HttpResponse.success('Success').withData({
-      code: request.signCode.value,
+      signCode: request.signCode.value,
     });
   }
 

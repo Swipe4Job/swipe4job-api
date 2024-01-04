@@ -7,6 +7,7 @@ import { SerializerResponseInterceptorInterceptor } from './core/serializer-resp
 import { HttpAllErrorsFilter } from './core/http-all-errors.filter';
 import helmet from 'helmet';
 import { EnvironmentService } from './shared/infrastructure/services/environment/environment.service';
+import { TransformInterceptor } from './core/transform/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
