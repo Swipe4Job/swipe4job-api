@@ -1,7 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { pipe } from 'fp-ts/function';
-import * as Either from 'fp-ts/Either';
-import { AuthTokenExpired } from '../../domain/AuthTokenExpired';
 import { UserAuthToken } from '../../domain/users/UserAuthToken';
 import { JWTService } from '../../domain/JWTService';
 import { UserContextService } from '../../../users/domain/UserContextService';
@@ -17,18 +14,7 @@ export class UserRefresh {
   ) {}
   public async run(jwt: string) {
     const result = await this.jwtService.verify(jwt);
-    const token = pipe(
-      result,
-      Either.match(
-        (err) => {
-          if (err instanceof AuthTokenExpired) {
-            // TODO emit event token expired
-          }
-          throw err;
-        },
-        (token) => UserAuthToken.from(token),
-      ),
-    );
+    const token = UserAuthToken.from(result);
     const users = await this.userContextService.searchUsers(
       new ByUserID(new UserId(token.payload.data.userID)),
     );

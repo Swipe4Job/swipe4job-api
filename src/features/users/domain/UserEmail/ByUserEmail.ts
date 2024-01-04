@@ -1,11 +1,8 @@
 import { UserCriteria } from '../UserRepository/UserCriteria';
 import {
-  Field,
   Filter,
   FilterGroup,
   Filters,
-  Operand,
-  Operator,
   Operators,
   Orders,
 } from '@zertifier/criteria';
@@ -16,11 +13,7 @@ export class ByUserEmail extends UserCriteria {
     super({
       filters: new Filters([
         FilterGroup.create([
-          new Filter(
-            new Field('email'),
-            Operator.from(Operators.EQUAL),
-            new Operand(userEmail.value),
-          ),
+          Filter.create('email', Operators.EQUAL, userEmail.value),
         ]),
       ]),
       orders: Orders.EMPTY(),

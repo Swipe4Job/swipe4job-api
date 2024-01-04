@@ -1,26 +1,11 @@
-import { Criteria, Limit, Skip } from '@zertifier/criteria';
 import { Filters } from '@zertifier/criteria/dist/Filters';
 import { Orders } from '@zertifier/criteria/dist/Orders';
+import { Criteria, Limit, Skip } from '@zertifier/criteria';
 import { FieldValidator } from '../../../../shared/domain/Criteria/FieldValidator';
 
-export class UserCriteria extends Criteria {
-  private allowedFilterFields = [
-    'name',
-    'email',
-    'walletAddress',
-    'phoneNumber',
-    'id',
-    'role',
-    'disabled',
-  ];
-  private allowedOrderFields = [
-    'name',
-    'email',
-    'walletAddress',
-    'phoneNumber',
-    'id',
-    'role',
-  ];
+export class Web3LoginRequestCriteria extends Criteria {
+  private allowedFilterFields = ['id', 'wallet_address'];
+  private allowedOrderFields = ['id', 'wallet_address'];
 
   constructor(params: {
     filters: Filters;
@@ -29,18 +14,17 @@ export class UserCriteria extends Criteria {
     limit?: Limit;
   }) {
     super(params);
-    // Validate filters
     const { filters, orders } = params;
     FieldValidator.hasValidFilters(filters, this.allowedFilterFields);
     FieldValidator.hasValidOrders(orders, this.allowedOrderFields);
   }
 
-  public static fromCriteria(criteria: Criteria) {
-    return new UserCriteria(criteria);
+  public static fromCriteria(criteria: Criteria): Web3LoginRequestCriteria {
+    return new Web3LoginRequestCriteria(criteria);
   }
 
-  public static override NONE(): UserCriteria {
-    return new UserCriteria({
+  public static override NONE(): Web3LoginRequestCriteria {
+    return new Web3LoginRequestCriteria({
       filters: Filters.EMPTY(),
       orders: Orders.EMPTY(),
     });
