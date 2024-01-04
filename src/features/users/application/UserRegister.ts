@@ -11,12 +11,9 @@ import { UserRole } from '../domain/UserRole';
 import { UserPassword } from '../domain/UserPassword';
 import { UserCriteria } from '../domain/UserRepository/UserCriteria';
 import {
-  Field,
   Filter,
   FilterGroup,
   Filters,
-  Operand,
-  Operator,
   Operators,
   Orders,
 } from '@zertifier/criteria';
