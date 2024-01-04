@@ -11,7 +11,7 @@ export class UserCriteria extends Criteria {
     'phoneNumber',
     'id',
     'role',
-    'enabled',
+    'disabled',
   ];
   private allowedOrderFields = [
     'name',

@@ -38,7 +38,7 @@ export class UserWeb3Login {
       new UserCriteria({
         filters: Filters.create([
           FilterGroup.create([
-            Filter.create('wallet_address', Operators.EQUAL, _walletAddress),
+            Filter.create('walletAddress', Operators.EQUAL, _walletAddress),
             Filter.create('disabled', Operators.EQUAL, false),
           ]),
         ]),
