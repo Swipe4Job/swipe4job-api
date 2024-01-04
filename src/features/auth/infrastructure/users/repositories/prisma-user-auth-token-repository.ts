@@ -9,8 +9,6 @@ import { ApplicationLogger } from '../../../../../shared/infrastructure/services
 import { UserAuthTokenNotFound } from '../../../domain/users/UserAuthTokenNotFound';
 import { ByUserAuthTokenId } from '../../../domain/AuthTokenId/ByUserAuthTokenId';
 import { JWTService } from '../../../domain/JWTService';
-import * as Either from 'fp-ts/Either';
-import { pipe } from 'fp-ts/function';
 import {
   FieldMapper,
   FieldMapping,
@@ -118,17 +116,7 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
 
     const tokens: UserAuthToken[] = [];
     for (const entry of result) {
-      const result = await this.jwtService.verify(entry.token);
-      const payload = pipe(
-        result,
-        Either.match(
-          (err) => {
-            throw err;
-          },
-          (payload) => payload,
-        ),
-      );
-
+      const payload = await this.jwtService.verify(entry.token);
       tokens.push(UserAuthToken.from(payload));
     }
 

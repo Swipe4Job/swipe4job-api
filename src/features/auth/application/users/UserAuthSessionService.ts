@@ -6,6 +6,8 @@ import {
 } from '../../domain/users/UserAuthToken';
 import { UserAuthTokensRepository } from '../../domain/users/UserAuthTokensRepository';
 import { JWTService } from '../../domain/JWTService';
+import { AuthTokenExpired } from '../../domain/AuthTokenExpired';
+import { ByUserAuthTokenId } from '../../domain/AuthTokenId/ByUserAuthTokenId';
 
 @Injectable()
 export class UserAuthSessionService {
@@ -35,7 +37,20 @@ export class UserAuthSessionService {
     };
   }
 
-  public closeSession(refreshToken: string): Promise<void> {
+  public async closeSession(jwt: string): Promise<void> {
+    try {
+      const payload = await this.jwtService.verify(jwt);
+      const token = UserAuthToken.from(payload);
+      await this.userAuthTokenRepository.delete(
+        new ByUserAuthTokenId(token.id),
+      );
+    } catch (err) {
+      if (err instanceof AuthTokenExpired) {
+        // TODO emit event token expired
+        return;
+      }
 
+      throw err;
+    }
   }
 }

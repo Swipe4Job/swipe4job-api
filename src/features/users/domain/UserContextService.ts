@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserRepository } from './UserRepository/UserRepository';
 import { UserCriteria } from './UserRepository/UserCriteria';
 import { User } from './User';
-import * as Either from 'fp-ts/Either';
-import { ApplicationError } from '../../../shared/domain/ApplicationError/ApplicationError';
 import { UserEmail } from './UserEmail/UserEmail';
-import { UnexpectedError } from '../../../shared/domain/ApplicationError/UnexpectedError';
 import { ByUserEmail } from './UserEmail/ByUserEmail';
 import { UserNotFound } from './UserRepository/UserNotFound';
 import { InvalidUserCredentials } from './InvalidUserCredentials';
@@ -43,31 +40,24 @@ export class UserContextService {
   public async validCredentials(
     email: string,
     password: string,
-  ): Promise<Either.Either<ApplicationError, User>> {
+  ): Promise<User> {
     // TODO check user credentials
+    const userEmail = new UserEmail(email);
+    const criteria = new ByUserEmail(userEmail);
+    let users;
     try {
-      const userEmail = new UserEmail(email);
-      const criteria = new ByUserEmail(userEmail);
-
-      const users = await this.userRepository.find(criteria);
-      const user = users[0];
-      if (user.password && !(await user.password.match(password))) {
-        return Either.left(new InvalidUserCredentials("Password don't match"));
-      }
-
-      return Either.right(user);
+      users = await this.userRepository.find(criteria);
     } catch (err) {
       if (err instanceof UserNotFound) {
-        return Either.left(
-          new InvalidUserCredentials(`User with email ${email} not found`),
-        );
+        throw new InvalidUserCredentials(`User with email ${email} not found`);
       }
-      if (err instanceof ApplicationError) {
-        return Either.left(err);
-      } else {
-        this.logger.debug(err);
-        return Either.left(new UnexpectedError());
-      }
+      throw err;
     }
+    const user = users[0];
+    if (user.password && !(await user.password.match(password))) {
+      throw new InvalidUserCredentials("Password don't match");
+    }
+
+    return user;
   }
 }

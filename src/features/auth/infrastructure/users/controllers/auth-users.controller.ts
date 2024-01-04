@@ -1,8 +1,6 @@
 import { Body, Controller, Delete, Post } from '@nestjs/common';
 import { UserLogin } from '../../../application/users/UserLogin';
 import { UserLoginRequestDTO } from './DTOs/UserLoginRequestDTO';
-import { pipe } from 'fp-ts/function';
-import * as Either from 'fp-ts/Either';
 import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse';
 import { UserLogoutRequestDTO } from './DTOs/UserLogoutRequestDTO';
 import { UserLogout } from '../../../application/users/UserLogout';
@@ -21,23 +19,14 @@ export class AuthUsersController {
   async requestSignCode() {}
 
   @Post('w3-login')
-  async web3UserLogin(@Body() { walletAddress, signature }: UserWeb3LoginDTO) {
-
-  }
+  async web3UserLogin(@Body() { walletAddress, signature }: UserWeb3LoginDTO) {}
 
   @Post('login')
   async userLogin(@Body() { email, password }: UserLoginRequestDTO) {
-    const result = await this.userLoginUseCase.web2(email, password);
-    const { refresh, access } = await pipe(
-      result,
-      Either.match(
-        (err) => {
-          throw err;
-        },
-        (tokens) => tokens,
-      ),
+    const { access, refresh } = await this.userLoginUseCase.web2(
+      email,
+      password,
     );
-
     return HttpResponse.success('Logged in successfully').withData({
       accessToken: access,
       refreshToken: refresh,

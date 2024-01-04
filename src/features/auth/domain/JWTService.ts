@@ -1,13 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { AuthToken, AuthTokenPayload } from './AuthToken';
-import * as Either from 'fp-ts/Either';
 import { errors, jwtVerify } from 'jose';
 import { EnvironmentService } from '../../../shared/infrastructure/services/environment/environment.service';
 import { AuthTokenExpired } from './AuthTokenExpired';
 import { InvalidToken } from './InvalidToken';
 import { ApplicationLogger } from '../../../shared/infrastructure/services/application-logger/application-logger';
-
-export type JwtError = AuthTokenExpired | InvalidToken;
 
 @Injectable()
 export class JWTService {
@@ -31,22 +28,20 @@ export class JWTService {
     return authToken.prepareSignature().sign(this.jwtSecret);
   }
 
-  async verify(
-    jwt: string,
-  ): Promise<Either.Either<JwtError, AuthTokenPayload<unknown>>> {
+  async verify(jwt: string): Promise<AuthTokenPayload<unknown>> {
     try {
       const result = await jwtVerify<AuthTokenPayload<unknown>>(
         jwt,
         this.jwtSecret,
       );
-      return Either.right(result.payload);
+      return result.payload;
     } catch (err) {
       if (err instanceof errors.JWTExpired) {
-        return Either.left(new AuthTokenExpired());
+        throw new AuthTokenExpired();
       }
 
       this.logger.debug(err);
-      return Either.left(new InvalidToken());
+      throw new InvalidToken();
     }
   }
 }
