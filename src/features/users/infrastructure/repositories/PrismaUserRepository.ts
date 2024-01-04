@@ -23,6 +23,7 @@ import { Criteria } from '@zertifier/criteria';
 
 const fieldMapping: FieldMapping = {
   id: 'uuid',
+  walletAddress: 'wallet_address',
 };
 
 @Injectable()

@@ -8,6 +8,7 @@ import { HttpAllErrorsFilter } from './core/http-all-errors.filter';
 import helmet from 'helmet';
 import { EnvironmentService } from './shared/infrastructure/services/environment/environment.service';
 import { TransformInterceptor } from './core/transform/transform.interceptor';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -44,6 +45,17 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  app.useGlobalInterceptors(new TransformInterceptor());
+
+  const config = new DocumentBuilder()
+    .setTitle('Zertiair')
+    .setDescription('Zertiair API description')
+    .setVersion('2.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger', app, document);
 
   // Start application and log info
   const port = environment.ENV.PORT;

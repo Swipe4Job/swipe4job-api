@@ -10,7 +10,9 @@ export class FieldValidator {
     for (const field of filterFields) {
       if (!fields.includes(field)) {
         throw new InvalidFilterField(
-          `Invalid filter field '${field}'. Allowed fields: [${fields.join(', ')}]`,
+          `Invalid filter field '${field}'. Allowed fields: [${fields.join(
+            ', ',
+          )}]`,
         );
       }
     }
@@ -21,7 +23,9 @@ export class FieldValidator {
     for (const field of orderFields) {
       if (!fields.includes(field)) {
         throw new InvalidOrderField(
-          `Invalid order field '${field}'. Allowed fields: [${fields.join(', ')}]`,
+          `Invalid order field '${field}'. Allowed fields: [${fields.join(
+            ', ',
+          )}]`,
         );
       }
     }

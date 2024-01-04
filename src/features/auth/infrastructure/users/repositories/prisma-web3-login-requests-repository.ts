@@ -10,6 +10,15 @@ import { WalletAddress } from '../../../../../shared/domain/WalletAddress/Wallet
 import { SignCode } from '../../../domain/Web3LoginRequest/SignCode';
 import { Web3LoginRequestNotFound } from '../../../domain/Web3LoginRequest/Web3LoginRequestNotFound';
 import { ByWeb3LoginRequestId } from '../../../domain/Web3LoginRequest/ByWeb3LoginRequestId';
+import {
+  FieldMapper,
+  FieldMapping,
+} from '../../../../../shared/domain/Criteria/FieldMapper';
+import { Criteria } from '@zertifier/criteria';
+
+const fieldMapping: FieldMapping = {
+  walletAddress: 'wallet_address',
+};
 
 @Injectable()
 export class PrismaWeb3LoginRequestsRepository
@@ -22,7 +31,10 @@ export class PrismaWeb3LoginRequestsRepository
   ) {}
 
   async delete(criteria: Web3LoginRequestCriteria): Promise<void> {
-    const filters = this.prismaCriteriaService.convertFilters(criteria.filters);
+    const mappedCriteria = this.mapFields(criteria);
+    const filters = this.prismaCriteriaService.convertFilters(
+      mappedCriteria.filters,
+    );
     try {
       await this.prisma.web3_requests.deleteMany({
         where: filters,
@@ -76,8 +88,13 @@ export class PrismaWeb3LoginRequestsRepository
   async search(
     criteria: Web3LoginRequestCriteria,
   ): Promise<Web3LoginRequest[] | undefined> {
-    const filters = this.prismaCriteriaService.convertFilters(criteria.filters);
-    const orders = this.prismaCriteriaService.convertOrders(criteria.orders);
+    const mappedCriteria = this.mapFields(criteria);
+    const filters = this.prismaCriteriaService.convertFilters(
+      mappedCriteria.filters,
+    );
+    const orders = this.prismaCriteriaService.convertOrders(
+      mappedCriteria.orders,
+    );
     let result;
     try {
       result = await this.prisma.web3_requests.findMany({
@@ -104,5 +121,9 @@ export class PrismaWeb3LoginRequestsRepository
     }
 
     return requests;
+  }
+
+  private mapFields(criteria: Web3LoginRequestCriteria): Criteria {
+    return FieldMapper.mapCriteria(fieldMapping, criteria);
   }
 }
