@@ -14,6 +14,7 @@ import { UserWeb3Login } from '../application/users/UserWeb3Login';
 import { PrismaWeb3LoginRequestsRepository } from './users/repositories/prisma-web3-login-requests-repository';
 import { Web3LoginRequestsRepository } from '../domain/Web3LoginRequest/Web3LoginRequestsRepository';
 import { UserAuthSessionService } from '../application/users/UserAuthSessionService';
+import { UserGetSignCode } from '../application/users/UserGetSignCode';
 
 @Module({
   imports: [SharedProvidersModule, UserServicesModule],
@@ -25,11 +26,11 @@ import { UserAuthSessionService } from '../application/users/UserAuthSessionServ
     UserRefresh,
     VerifyAuthToken,
     UserAuthSessionService,
+    UserGetSignCode,
     {
       provide: UserAuthTokensRepository,
       useClass: PrismaUserAuthTokenRepository,
     },
-    PrismaWeb3LoginRequestsRepository,
     {
       provide: Web3LoginRequestsRepository,
       useClass: PrismaWeb3LoginRequestsRepository,
