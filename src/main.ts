@@ -45,6 +45,8 @@ async function bootstrap() {
     }),
   );
 
+  app.useGlobalInterceptors(new TransformInterceptor());
+
   // Start application and log info
   const port = environment.ENV.PORT;
   await app.listen(port);
