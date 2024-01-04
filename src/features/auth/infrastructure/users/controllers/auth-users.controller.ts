@@ -9,6 +9,7 @@ import { UserWeb3LoginDTO } from './DTOs/UserWeb3LoginDTO';
 import { UserWeb3Login } from '../../../application/users/UserWeb3Login';
 import { UserGetSignCode } from '../../../application/users/UserGetSignCode';
 import { UserWeb3GetSignCodeDTO } from './DTOs/UserWeb3GetSignCodeDTO';
+import { UserRefreshRequestDTO } from './DTOs/UserRefreshRequestDTO';
 
 @Controller('users')
 export class AuthUsersController {
@@ -53,7 +54,7 @@ export class AuthUsersController {
   }
 
   @Post('refresh')
-  async userRefresh(@Body() { token }: UserLogoutRequestDTO) {
+  async userRefresh(@Body() { token }: UserRefreshRequestDTO) {
     const accessToken = await this.userRefreshUseCase.run(token);
     return HttpResponse.success('Token refreshed').withData(accessToken);
   }
