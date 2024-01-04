@@ -19,6 +19,10 @@ import { PhoneNumber } from '../src/features/users/domain/PhoneNumber/PhoneNumbe
 import { UserEmail } from '../src/features/users/domain/UserEmail/UserEmail';
 import { UserName } from '../src/features/users/domain/UserName';
 import { JWTService } from '../src/features/auth/domain/JWTService';
+import { UserAuthTokensRepository } from '../src/features/auth/domain/users/UserAuthTokensRepository';
+import { UserAuthToken } from '../src/features/auth/domain/users/UserAuthToken';
+import { UserAuthTokenCriteria } from '../src/features/auth/domain/users/UserAuthTokenCriteria';
+import { UserAuthTokenNotFound } from '../src/features/auth/domain/users/UserAuthTokenNotFound';
 
 describe('UserAuthController (e2e)', () => {
   const wallet = ethers.Wallet.createRandom();
@@ -69,6 +73,28 @@ describe('UserAuthController (e2e)', () => {
     },
   };
 
+  let tokens: UserAuthToken[] = [];
+  const userAuthTokensRepository: UserAuthTokensRepository = {
+    async delete(criteria: UserAuthTokenCriteria): Promise<void> {
+      tokens = [];
+    },
+    async find(criteria: UserAuthTokenCriteria): Promise<UserAuthToken[]> {
+      const result = await this.search(criteria);
+      if (!result) {
+        throw new UserAuthTokenNotFound();
+      }
+
+      return result;
+    },
+    async save(userAuthToken: UserAuthToken): Promise<void> {
+      tokens.push(userAuthToken);
+    },
+    async search(
+      criteria: UserAuthTokenCriteria,
+    ): Promise<UserAuthToken[] | undefined> {
+      return tokens.length === 0 ? undefined : tokens;
+    },
+  };
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
@@ -77,6 +103,8 @@ describe('UserAuthController (e2e)', () => {
       .useValue(web3LoginRequestRepository)
       .overrideProvider(UserRepository)
       .useValue(userRepository)
+      .overrideProvider(UserAuthTokensRepository)
+      .useValue(userAuthTokensRepository)
       .compile();
 
     users = [
@@ -91,6 +119,7 @@ describe('UserAuthController (e2e)', () => {
       }),
     ];
     requests = [];
+    tokens = [];
 
     app = moduleRef.createNestApplication();
     app.useGlobalInterceptors(new TransformInterceptor());
