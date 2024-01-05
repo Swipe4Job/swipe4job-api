@@ -30,6 +30,7 @@ export class JWTService {
 
   async verify(jwt: string): Promise<AuthTokenPayload<unknown>> {
     try {
+      // TODO add more edge cases
       const result = await jwtVerify<AuthTokenPayload<unknown>>(
         jwt,
         this.jwtSecret,

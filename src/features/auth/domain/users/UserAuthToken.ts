@@ -4,11 +4,18 @@ import { InvalidTokenPayload } from '../InvalidTokenPayload';
 import moment from 'moment';
 import { AuthTokenId } from '../AuthTokenId/AuthTokenId';
 import { UnexpectedError } from '../../../../shared/domain/ApplicationError/UnexpectedError';
+import { ApiAuthTokenPayload } from '../ApiAuthToken';
 
 export type UserAuthTokenPayload = {
   userID: string;
   walletAddress: string;
   role: string;
+};
+
+const examplePayload: UserAuthTokenPayload = {
+  userID: '',
+  walletAddress: '',
+  role: '',
 };
 
 export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
@@ -35,8 +42,7 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
   }
 
   public static createAccessToken(data: UserAuthTokenPayload) {
-    // TODO change to 15 minutes when refresh token is implemented on frontend
-    const expirationDate = moment().add(6, 'hours').toDate();
+    const expirationDate = moment().add(15, 'minutes').toDate();
     return new UserAuthToken(data, 'access').withExpirationDate(expirationDate);
   }
 
@@ -67,7 +73,10 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
   }
 
   private static isValidData(value: unknown): value is UserAuthTokenPayload {
-    const keys = ['id'];
+    // TODO add more keys
+    const keys: (keyof UserAuthTokenPayload)[] = Object.keys(
+      examplePayload,
+    ) as (keyof UserAuthTokenPayload)[];
     const valueKeys = Object.keys(value as any);
     for (const key of keys) {
       if (!valueKeys.includes(key)) {
