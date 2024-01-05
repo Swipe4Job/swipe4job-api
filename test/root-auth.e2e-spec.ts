@@ -58,7 +58,7 @@ describe('RootAuthController', () => {
       .expect(201);
   });
 
-  it('shoul verify api auth tokens', async () => {
+  it('should verify api auth tokens', async () => {
     const apiAuthToken = new ApiAuthToken({ name: 'simple api integration' });
     const signedToken = await jwtService.sign(apiAuthToken);
     return request(app.getHttpServer())
