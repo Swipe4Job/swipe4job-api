@@ -15,10 +15,12 @@ import { PrismaWeb3LoginRequestsRepository } from './users/repositories/prisma-w
 import { Web3LoginRequestsRepository } from '../domain/Web3LoginRequest/Web3LoginRequestsRepository';
 import { UserAuthSessionService } from '../application/users/UserAuthSessionService';
 import { UserGetSignCode } from '../application/users/UserGetSignCode';
+import { AuthTokenGuard } from './auth-token/auth-token.guard';
 
 @Module({
   imports: [SharedProvidersModule, UserServicesModule],
   providers: [
+    AuthTokenGuard,
     JWTService,
     UserLogin,
     UserWeb3Login,
@@ -37,5 +39,6 @@ import { UserGetSignCode } from '../application/users/UserGetSignCode';
     },
   ],
   controllers: [AuthUsersController, RootController],
+  exports: [AuthTokenGuard, JWTService]
 })
 export class AuthModule {}

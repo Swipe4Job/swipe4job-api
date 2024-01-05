@@ -4,13 +4,16 @@ import { SharedProvidersModule } from '../../../shared/infrastructure/services/s
 import { TransactionRepository } from '../domain/TransactionRepository';
 import { PrismaTransactionRepository } from './repositories/prisma-transaction-repository/prisma-transaction-repository';
 import { TransactionMigrationService } from './transaction-migration-service';
+import { PaymentService } from './services/payment/payment.service';
+import { AuthModule } from '../../auth/infrastructure/auth.module';
 
 @Module({
-  imports: [SharedProvidersModule],
+  imports: [SharedProvidersModule, AuthModule],
   controllers: [TransactionsController],
   providers: [
     { provide: TransactionRepository, useClass: PrismaTransactionRepository },
     TransactionMigrationService,
+    PaymentService,
   ],
 })
 export class TransactionsModule {}
