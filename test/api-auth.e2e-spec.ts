@@ -1,3 +1,3 @@
-describe("ApiAuthController", () => {
-  it("", () => {});
+describe('ApiAuthController', () => {
+  it('', () => {});
 });

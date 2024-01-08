@@ -39,6 +39,6 @@ import { AuthTokenGuard } from './auth-token/auth-token.guard';
     },
   ],
   controllers: [AuthUsersController, RootController],
-  exports: [AuthTokenGuard, JWTService]
+  exports: [AuthTokenGuard, JWTService],
 })
 export class AuthModule {}
