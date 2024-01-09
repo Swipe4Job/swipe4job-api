@@ -209,6 +209,7 @@ model transactions {
   transaction_date    DateTime
   state               String
   sensor_data_entries sensor_data[]
+  sensor_uuid         String        @default("")
 }
 
 model web3_requests {
