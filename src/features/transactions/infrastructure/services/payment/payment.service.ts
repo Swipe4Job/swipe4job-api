@@ -3,6 +3,7 @@ import { ethers, Signature } from 'ethers';
 import * as crypto from 'crypto';
 import { EnvironmentService } from '../../../../../shared/infrastructure/services/environment/environment.service';
 import abi from '../../../../../../contracts/zertiair-token.abi.json';
+import { WalletAddress } from '../../../../../shared/domain/WalletAddress/WalletAddress';
 
 @Injectable()
 export class PaymentService {
@@ -26,15 +27,7 @@ export class PaymentService {
     );
   }
 
-  public async makePayment(
-    walletAddress: string,
-    amount: number,
-  ): Promise<string> {
-    const buffer = crypto.randomBytes(20);
-    return ethers.id(buffer.toString());
-  }
-
-  public async mint(destination: string, amount: number) {
+  public async makePayment(destination: string, amount: number) {
     const transaction: ethers.TransactionResponse =
       await this.smartContract.mint(destination, amount);
     const receipt = await transaction.wait();
@@ -54,8 +47,8 @@ export class PaymentService {
     }
   }
 
-  public async balance(address: string): Promise<string> {
-    const response: bigint = await this.smartContract.balanceOf(address);
+  public async balance(address: WalletAddress): Promise<string> {
+    const response: bigint = await this.smartContract.balanceOf(address.value);
     return response.toString();
   }
 }

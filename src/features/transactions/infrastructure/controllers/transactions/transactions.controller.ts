@@ -76,7 +76,7 @@ export class TransactionsController {
 
   @Post('/mint')
   async mint(@Body() body: any) {
-    await this.paymentService.mint(body.to, body.amount);
+    await this.paymentService.makePayment(body.to, body.amount);
 
     return HttpResponse.success('Success mint');
   }

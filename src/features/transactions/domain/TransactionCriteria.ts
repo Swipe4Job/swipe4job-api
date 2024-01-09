@@ -6,6 +6,7 @@ import { FieldValidator } from '../../../shared/domain/Criteria/FieldValidator';
 export class TransactionCriteria extends Criteria {
   private allowedFilterFields = [
     'id',
+    'sensor_id',
     'destination_wallet',
     'tokens',
     'transaction_date',
@@ -13,6 +14,7 @@ export class TransactionCriteria extends Criteria {
   ];
   private allowedOrderFields = [
     'id',
+    'sensor_id',
     'destination_wallet',
     'tokens',
     'transaction_date',
