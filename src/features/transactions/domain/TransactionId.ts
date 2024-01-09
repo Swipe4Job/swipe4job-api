@@ -1,7 +1,7 @@
 import { UUIDValueObject } from '../../../shared/domain/ValueObject/UUIDValueObject';
 import { InvalidArgument } from '../../../shared/domain/InvalidArgument';
 
-export class TransactionID extends UUIDValueObject {
+export class TransactionId extends UUIDValueObject {
   constructor(value: string) {
     try {
       super(value);

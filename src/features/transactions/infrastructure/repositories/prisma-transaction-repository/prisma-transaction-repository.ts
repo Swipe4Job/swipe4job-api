@@ -1,21 +1,71 @@
 import { Injectable } from '@nestjs/common';
 import { TransactionRepository } from '../../../domain/TransactionRepository';
-import { TransactionID } from '../../../domain/TransactionID';
+import { TransactionId } from '../../../domain/TransactionId';
 import { Transaction } from '../../../domain/Transaction';
 import { PrismaProvider } from '../../../../../shared/infrastructure/services/prisma-client/prisma-provider.service';
 import { ApplicationLogger } from '../../../../../shared/infrastructure/services/application-logger/application-logger';
 import { PersistenceError } from '../../../../../shared/domain/PersistenceError';
-import { WalletAddress } from '../../../../../shared/domain/WalletAddress/WalletAddress';
 import { TransactionDate } from '../../../domain/TransactionDate';
 import { TransactionState } from '../../../domain/TransactionState';
+import { SensorId } from '../../../../sensors/domain/SensorId';
+import { TransactionCriteria } from '../../../domain/TransactionCriteria';
+import { TransactionNotFound } from '../../../domain/TransactionNotFound';
+import { PrismaCriteriaService } from '../../../../../shared/infrastructure/services/PrismaCriteria/PrismaCriteriaService';
+import { WalletAddress } from '../../../../../shared/domain/WalletAddress/WalletAddress';
+import { ByTransactionId } from '../../../domain/ByTransactionId';
 
 @Injectable()
 export class PrismaTransactionRepository implements TransactionRepository {
   constructor(
     private prisma: PrismaProvider,
     private logger: ApplicationLogger,
+    private prismaCriteria: PrismaCriteriaService,
   ) {}
-  async delete(id: TransactionID): Promise<void> {
+
+  async search(
+    criteria: TransactionCriteria,
+  ): Promise<Transaction[] | undefined> {
+    let result;
+    const filters = this.prismaCriteria.convertFilters(criteria.filters);
+    const orders = this.prismaCriteria.convertOrders(criteria.orders);
+
+    try {
+      result = await this.prisma.transactions.findMany({
+        where: filters,
+        orderBy: orders,
+        take: criteria.limit.value || undefined,
+        skip: criteria.skip.value || undefined,
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw new PersistenceError('Error removing transaction');
+    }
+
+    if (!result) {
+      return;
+    }
+
+    if (!result) {
+      return;
+    }
+
+    result.map((result) => {
+      const transaction = new Transaction(
+        new SensorId(result.sensor_uuid),
+        result.tokens,
+      )
+        .withId(new TransactionId(result.id))
+        .withDate(new TransactionDate(result.transaction_date))
+        .withState(new TransactionState(result.state));
+      if (result.destination_wallet) {
+        transaction.withDestinationWallet(
+          new WalletAddress(result.destination_wallet),
+        );
+      }
+    });
+  }
+
+  async delete(id: TransactionId): Promise<void> {
     try {
       await this.prisma.transactions.deleteMany({
         where: {
@@ -28,39 +78,24 @@ export class PrismaTransactionRepository implements TransactionRepository {
     }
   }
 
-  async find(id: TransactionID): Promise<Transaction | undefined> {
-    let result;
-    try {
-      result = await this.prisma.transactions.findFirst({
-        where: {
-          id: id.value,
-        },
-      });
-    } catch (err) {
-      this.logger.error(err);
-      throw new PersistenceError('Error removing transaction');
+  async find(criteria: TransactionCriteria): Promise<Transaction[]> {
+    const transactions = await this.search(criteria);
+    if (!transactions) {
+      throw new TransactionNotFound();
     }
 
-    if (!result) {
-      return;
-    }
-
-    return new Transaction(
-      new WalletAddress(result.destination_wallet),
-      result.tokens,
-    )
-      .withId(new TransactionID(result.id))
-      .withDate(new TransactionDate(result.transaction_date))
-      .withState(new TransactionState(result.state));
+    return transactions;
   }
 
   async save(transaction: Transaction): Promise<void> {
-    const transactionExists = !!(await this.find(transaction.id));
+    const transactionExists = !!(await this.find(
+      new ByTransactionId(transaction.id),
+    ));
     if (transactionExists) {
       try {
         await this.prisma.transactions.update({
           data: {
-            destination_wallet: transaction.destinationWallet.value,
+            destination_wallet: transaction.destinationWallet?.value,
             tokens: transaction.tokens,
             transaction_date: transaction.date.value,
             state: transaction.state.value,
@@ -78,7 +113,8 @@ export class PrismaTransactionRepository implements TransactionRepository {
         await this.prisma.transactions.create({
           data: {
             id: transaction.id.value,
-            destination_wallet: transaction.destinationWallet.value,
+            sensor_uuid: transaction.sensorId.value,
+            destination_wallet: transaction.destinationWallet?.value || '',
             tokens: transaction.tokens,
             transaction_date: transaction.date.value,
             state: transaction.state.value,

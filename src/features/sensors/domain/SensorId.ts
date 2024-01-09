@@ -1,3 +1,3 @@
-import { UIntegerValueObject } from '../../../shared/domain/ValueObject/UIntegerValueObject';
+import { UUIDValueObject } from '../../../shared/domain/ValueObject/UUIDValueObject';
 
-export class SensorId extends UIntegerValueObject {}
+export class SensorId extends UUIDValueObject {}

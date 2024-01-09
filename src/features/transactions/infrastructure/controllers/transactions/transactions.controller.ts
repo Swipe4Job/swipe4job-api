@@ -1,8 +1,7 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ReqNewTransactionDTO } from './DTOs/NewTransaction/ReqNewTransactionDTO';
 import { Transaction } from '../../../domain/Transaction';
-import { TransactionID } from '../../../domain/TransactionID';
-import { WalletAddress } from '../../../../../shared/domain/WalletAddress/WalletAddress';
+import { TransactionId } from '../../../domain/TransactionId';
 import { TransactionRepository } from '../../../domain/TransactionRepository';
 import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse';
 import { ClaimTokensRequest } from './DTOs/ClaimTokensRequest';
@@ -16,6 +15,7 @@ import { TransactionState } from '../../../domain/TransactionState';
 import { OnEvent } from '@nestjs/event-emitter';
 import { TokensClaimed } from '../../../domain/TokensClaimed';
 import { ClaimStarted } from '../../../domain/ClaimStarted';
+import { SensorId } from '../../../../sensors/domain/SensorId';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -28,11 +28,11 @@ export class TransactionsController {
   @Post('/')
   async newTransaction(@Body() body: ReqNewTransactionDTO) {
     const transaction = new Transaction(
-      new WalletAddress(body.destinationWallet),
+      new SensorId(body.sensorId),
       body.tokens,
     );
     if (body.id) {
-      transaction.withId(new TransactionID(body.id));
+      transaction.withId(new TransactionId(body.id));
     }
 
     await this.transactionRepository.save(transaction);

@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { TransactionRepository } from '../../../domain/TransactionRepository';
-import { TransactionID } from '../../../domain/TransactionID';
+import { TransactionId } from '../../../domain/TransactionId';
 import { Transaction } from '../../../domain/Transaction';
 
 @Injectable()
-export class InMemoryTransactionRepository implements TransactionRepository {
-  transactions: Map<TransactionID, Transaction> = new Map<
-    TransactionID,
+export class InMemoryTransactionRepository {
+  transactions: Map<TransactionId, Transaction> = new Map<
+    TransactionId,
     Transaction
   >();
-  async delete(id: TransactionID): Promise<void> {
+  async delete(id: TransactionId): Promise<void> {
     this.transactions.delete(id);
   }
 
-  async find(id: TransactionID): Promise<Transaction | undefined> {
+  async find(id: TransactionId): Promise<Transaction | undefined> {
     return this.transactions.get(id);
   }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ApplicationEvent } from '../../shared/domain/Events/ApplicationEvent';
+import { ApplicationEvent } from '../../../domain/Events/ApplicationEvent';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()

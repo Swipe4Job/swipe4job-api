@@ -1,16 +1,11 @@
-import {
-  IsEthereumAddress,
-  IsOptional,
-  IsPositive,
-  IsUUID,
-} from 'class-validator';
+import { IsOptional, IsPositive, IsUUID } from 'class-validator';
 
 export class ReqNewTransactionDTO {
   @IsUUID(4)
   @IsOptional()
   id?: string;
-  @IsEthereumAddress()
-  destinationWallet!: string;
+  @IsUUID(4)
+  sensorId!: string;
   @IsPositive()
   tokens!: number;
 }
