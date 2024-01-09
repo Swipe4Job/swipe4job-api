@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ReqNewTransactionDTO } from './DTOs/NewTransaction/ReqNewTransactionDTO';
 import { Transaction } from '../../../domain/Transaction';
 import { TransactionID } from '../../../domain/TransactionID';
@@ -13,6 +13,9 @@ import { PaymentService } from '../../services/payment/payment.service';
 import { UserAuthToken } from '../../../../auth/domain/users/UserAuthToken';
 import { PrismaProvider } from '../../../../../shared/infrastructure/services/prisma-client/prisma-provider.service';
 import { TransactionState } from '../../../domain/TransactionState';
+import { OnEvent } from '@nestjs/event-emitter';
+import { TokensClaimed } from '../../../domain/TokensClaimed';
+import { ClaimStarted } from '../../../domain/ClaimStarted';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -69,5 +72,36 @@ export class TransactionsController {
     );
 
     return HttpResponse.success('Tokens claimed');
+  }
+
+  @Post('/mint')
+  async mint(@Body() body: any) {
+    await this.paymentService.mint(body.to, body.amount);
+
+    return HttpResponse.success('Success mint');
+  }
+
+  @Post('/burn')
+  async burn(@Body() body: any) {
+    await this.paymentService.burn(body.amount);
+
+    return HttpResponse.success('Success burn');
+  }
+
+  @Get('/balance')
+  async balance(@Query() body: any) {
+    const balance = await this.paymentService.balance(body.address);
+
+    return HttpResponse.success('Success balance').withData({ balance });
+  }
+
+  @OnEvent(ClaimStarted.NAME)
+  claimStarted(event: ClaimStarted) {
+
+  }
+
+  @OnEvent(TokensClaimed.NAME)
+  tokensClaimed(event: TokensClaimed) {
+
   }
 }

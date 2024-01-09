@@ -6,6 +6,7 @@ import { PrismaTransactionRepository } from './repositories/prisma-transaction-r
 import { TransactionMigrationService } from './transaction-migration-service';
 import { PaymentService } from './services/payment/payment.service';
 import { AuthModule } from '../../auth/infrastructure/auth.module';
+import { ClaimTokens } from '../application/ClaimTokens';
 
 @Module({
   imports: [SharedProvidersModule, AuthModule],
@@ -14,6 +15,7 @@ import { AuthModule } from '../../auth/infrastructure/auth.module';
     { provide: TransactionRepository, useClass: PrismaTransactionRepository },
     TransactionMigrationService,
     PaymentService,
+    ClaimTokens,
   ],
 })
 export class TransactionsModule {}
