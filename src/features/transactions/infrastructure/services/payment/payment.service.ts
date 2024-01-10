@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ethers } from 'ethers';
 import { EnvironmentService } from '../../../../../shared/infrastructure/services/environment/environment.service';
-import abi from '../../../../../../contracts/zertiair-token.abi.json';
+import abi from '../../../../../shared/infrastructure/contracts/zertiair-token.abi.json';
 import { WalletAddress } from '../../../../../shared/domain/WalletAddress/WalletAddress';
 import { TransactionFailed } from '../../../domain/TransactionFailed';
 
