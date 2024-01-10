@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ethers, Signature } from 'ethers';
-import * as crypto from 'crypto';
+import { ethers } from 'ethers';
 import { EnvironmentService } from '../../../../../shared/infrastructure/services/environment/environment.service';
 import abi from '../../../../../../contracts/zertiair-token.abi.json';
 import { WalletAddress } from '../../../../../shared/domain/WalletAddress/WalletAddress';
+import { TransactionFailed } from '../../../domain/TransactionFailed';
 
 @Injectable()
 export class PaymentService {
@@ -32,8 +32,8 @@ export class PaymentService {
       await this.smartContract.mint(destination, amount);
     const receipt = await transaction.wait();
     if (!receipt) {
-      // Transaction cannot be done
-      throw new Error('Transaction cannot complete');
+      // TODO catch error event to specify error message
+      throw new TransactionFailed();
     }
   }
 
@@ -42,8 +42,8 @@ export class PaymentService {
       await this.smartContract.burn(amount);
     const receipt = await transaction.wait();
     if (!receipt) {
-      // Transaction cannot be done
-      throw new Error('Transaction cannot complete');
+      // TODO catch error event to specify error message
+      throw new TransactionFailed();
     }
   }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TransactionRepository } from '../../../domain/TransactionRepository';
+import { TransactionRepository } from '../../../domain/TransactionRepository/TransactionRepository';
 import { TransactionId } from '../../../domain/TransactionId';
 import { Transaction } from '../../../domain/Transaction';
 

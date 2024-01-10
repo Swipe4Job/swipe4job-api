@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ReqNewTransactionDTO } from './DTOs/NewTransaction/ReqNewTransactionDTO';
 import { Transaction } from '../../../domain/Transaction';
 import { TransactionId } from '../../../domain/TransactionId';
-import { TransactionRepository } from '../../../domain/TransactionRepository';
+import { TransactionRepository } from '../../../domain/TransactionRepository/TransactionRepository';
 import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse';
 import { ClaimTokensRequest } from './DTOs/ClaimTokensRequest';
 import { AuthTokenGuard } from '../../../../auth/infrastructure/auth-token/auth-token.guard';
@@ -10,19 +10,18 @@ import { InjectAuthToken } from '../../../../auth/infrastructure/auth-token/auth
 import { AuthTokenPayload } from '../../../../auth/domain/AuthToken';
 import { PaymentService } from '../../services/payment/payment.service';
 import { UserAuthToken } from '../../../../auth/domain/users/UserAuthToken';
-import { PrismaProvider } from '../../../../../shared/infrastructure/services/prisma-client/prisma-provider.service';
-import { TransactionState } from '../../../domain/TransactionState';
 import { OnEvent } from '@nestjs/event-emitter';
 import { TokensClaimed } from '../../../domain/TokensClaimed';
 import { ClaimStarted } from '../../../domain/ClaimStarted';
 import { SensorId } from '../../../../sensors/domain/SensorId';
+import { ClaimTokens } from '../../../application/ClaimTokens';
 
 @Controller('transactions')
 export class TransactionsController {
   constructor(
     private transactionRepository: TransactionRepository,
     private paymentService: PaymentService,
-    private prisma: PrismaProvider,
+    private claimTokensAction: ClaimTokens,
   ) {}
 
   @Post('/')
@@ -47,30 +46,10 @@ export class TransactionsController {
     @InjectAuthToken() authTokenPayload: AuthTokenPayload<unknown>,
   ) {
     const userAuthToken = UserAuthToken.from(authTokenPayload);
-    const transactions = await this.prisma.transactions.findMany({
-      where: {
-        sensor_data_entries: {
-          every: {
-            sensor_id: sensorId,
-          },
-        },
-        state: {
-          not: {
-            equals: TransactionState.CLAIMED().value,
-          },
-        },
-      },
-    });
-
-    const totalTokens = transactions
-      .map((t) => t.tokens)
-      .reduce((accumulator, current) => accumulator + current);
-
-    await this.paymentService.makePayment(
-      userAuthToken.payload.data.walletAddress,
-      totalTokens,
+    await this.claimTokensAction.run(
+      sensorId,
+      userAuthToken.payload.data.userID,
     );
-
     return HttpResponse.success('Tokens claimed');
   }
 
@@ -96,12 +75,8 @@ export class TransactionsController {
   }
 
   @OnEvent(ClaimStarted.NAME)
-  claimStarted(event: ClaimStarted) {
-
-  }
+  claimStarted(event: ClaimStarted) {}
 
   @OnEvent(TokensClaimed.NAME)
-  tokensClaimed(event: TokensClaimed) {
-
-  }
+  tokensClaimed(event: TokensClaimed) {}
 }

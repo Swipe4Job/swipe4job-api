@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TransactionRepository } from '../../../domain/TransactionRepository';
+import { TransactionRepository } from '../../../domain/TransactionRepository/TransactionRepository';
 import { TransactionId } from '../../../domain/TransactionId';
 import { Transaction } from '../../../domain/Transaction';
 import { PrismaProvider } from '../../../../../shared/infrastructure/services/prisma-client/prisma-provider.service';
@@ -8,11 +8,11 @@ import { PersistenceError } from '../../../../../shared/domain/PersistenceError'
 import { TransactionDate } from '../../../domain/TransactionDate';
 import { TransactionState } from '../../../domain/TransactionState';
 import { SensorId } from '../../../../sensors/domain/SensorId';
-import { TransactionCriteria } from '../../../domain/TransactionCriteria';
-import { TransactionNotFound } from '../../../domain/TransactionNotFound';
+import { TransactionCriteria } from '../../../domain/TransactionRepository/TransactionCriteria';
+import { TransactionNotFound } from '../../../domain/TransactionRepository/TransactionNotFound';
 import { PrismaCriteriaService } from '../../../../../shared/infrastructure/services/PrismaCriteria/PrismaCriteriaService';
 import { WalletAddress } from '../../../../../shared/domain/WalletAddress/WalletAddress';
-import { ByTransactionId } from '../../../domain/ByTransactionId';
+import { ByTransactionId } from '../../../domain/TransactionRepository/ByTransactionId';
 
 @Injectable()
 export class PrismaTransactionRepository implements TransactionRepository {
