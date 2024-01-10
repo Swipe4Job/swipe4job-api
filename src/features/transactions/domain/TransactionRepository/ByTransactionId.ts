@@ -1,5 +1,5 @@
 import { TransactionCriteria } from './TransactionCriteria';
-import { TransactionId } from './TransactionId';
+import { TransactionId } from '../TransactionId';
 import {
   Filter,
   FilterGroup,

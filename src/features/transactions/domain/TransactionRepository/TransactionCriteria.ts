@@ -1,7 +1,7 @@
 import { Criteria, Limit, Skip } from '@zertifier/criteria';
 import { Filters } from '@zertifier/criteria/dist/Filters';
 import { Orders } from '@zertifier/criteria/dist/Orders';
-import { FieldValidator } from '../../../shared/domain/Criteria/FieldValidator';
+import { FieldValidator } from '../../../../shared/domain/Criteria/FieldValidator';
 
 export class TransactionCriteria extends Criteria {
   private allowedFilterFields = [

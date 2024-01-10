@@ -1,5 +1,5 @@
-import { Transaction } from './Transaction';
-import { TransactionId } from './TransactionId';
+import { Transaction } from '../Transaction';
+import { TransactionId } from '../TransactionId';
 import { TransactionCriteria } from './TransactionCriteria';
 
 export abstract class TransactionRepository {

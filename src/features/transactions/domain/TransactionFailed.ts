@@ -1,10 +1,9 @@
 import { ApplicationError } from '../../../shared/domain/ApplicationError/ApplicationError';
 import { ErrorCode } from '../../../shared/domain/ApplicationError/ErrorCode';
 
-export class TransactionNotFound extends ApplicationError {
+export class TransactionFailed extends ApplicationError {
   readonly errorCode: ErrorCode = ErrorCode.INTERNAL_ERROR;
-
-  constructor(message = 'Transaction not found', readonly showStack = false) {
+  constructor(message = 'Transaction failed', readonly showStack = true) {
     super(message);
   }
 }
