@@ -88,7 +88,7 @@ export class PrismaTransactionRepository implements TransactionRepository {
   }
 
   async save(transaction: Transaction): Promise<void> {
-    const transactionExists = !!(await this.find(
+    const transactionExists = !!(await this.search(
       new ByTransactionId(transaction.id),
     ));
     if (transactionExists) {
