@@ -1,11 +1,11 @@
-import { IsNumber, IsOptional, IsPositive, IsUUID } from 'class-validator';
+import { IsOptional, IsPositive, IsUUID } from 'class-validator';
 
 export class ReqNewTransactionDTO {
   @IsUUID(4)
   @IsOptional()
   id?: string;
-  @IsNumber()
-  sensorId!: number;
+  @IsUUID()
+  sensorId!: string;
   @IsPositive()
   tokens!: number;
 }

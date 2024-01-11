@@ -11,6 +11,7 @@ import {
   FieldMapper,
   FieldMapping,
 } from '../../../../shared/domain/Criteria/FieldMapper';
+import { SensorId } from '../../domain/SensorId';
 
 @Injectable()
 export class PrismaSensorsRepository implements SensorRepository {
@@ -65,7 +66,9 @@ export class PrismaSensorsRepository implements SensorRepository {
     }
 
     return result.map((r) => {
-      return new Sensor().withLegacyId(new SensorLegacyId(r.id));
+      return new Sensor()
+        .withLegacyId(new SensorLegacyId(r.id))
+        .withId(new SensorId(r.uuid));
     });
   }
 }

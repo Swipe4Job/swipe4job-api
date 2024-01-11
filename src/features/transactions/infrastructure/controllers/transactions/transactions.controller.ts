@@ -27,17 +27,15 @@ export class TransactionsController {
     private transactionRepository: TransactionRepository,
     private paymentService: PaymentService,
     private claimTokensAction: ClaimTokens,
-    private sensorRepository: SensorRepository,
   ) {}
 
   @Post('/')
   async newTransaction(@Body() body: ReqNewTransactionDTO) {
-    const sensors: Sensor[] = await this.sensorRepository.find(
-      new BySensorLegacyId(new SensorLegacyId(body.sensorId)),
+    // TODO verify sensor exists
+    const transaction = new Transaction(
+      new SensorId(body.sensorId),
+      body.tokens,
     );
-    const sensor = sensors[0];
-
-    const transaction = new Transaction(sensor.id, body.tokens);
     if (body.id) {
       transaction.withId(new TransactionId(body.id));
     }
