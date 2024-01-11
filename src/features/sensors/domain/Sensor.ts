@@ -1,22 +1,26 @@
 import { SensorId } from './SensorId';
 import { Serializer } from '../../../shared/domain/Serializer';
-import { UserId } from '../../users/domain/UserID/UserId';
+import { SensorLegacyId } from './SensorLegacyId';
 
 export class Sensor implements Serializer {
+  get legacyId(): SensorLegacyId | undefined {
+    return this._legacyId;
+  }
+  constructor() {
+    this._id = SensorId.random();
+  }
+
+  private _legacyId?: SensorLegacyId;
+
+  private _id: SensorId;
+
   get id(): SensorId {
     return this._id;
   }
-  private _id: SensorId;
 
-  private _userId: UserId;
-
-  get userId(): UserId {
-    return this._userId;
-  }
-
-  constructor(params: { userId: UserId }) {
-    this._id = SensorId.random();
-    this._userId = params.userId;
+  withLegacyId(legacyId: SensorLegacyId): Sensor {
+    this._legacyId = legacyId;
+    return this;
   }
 
   withId(id: SensorId): Sensor {
@@ -24,15 +28,10 @@ export class Sensor implements Serializer {
     return this;
   }
 
-  withUserId(userId: UserId): Sensor {
-    this._userId = userId;
-    return this;
-  }
-
   serialize() {
     return {
       id: this._id.value,
-      userId: this._userId.value,
+      legacyId: this._legacyId?.value,
     };
   }
 }

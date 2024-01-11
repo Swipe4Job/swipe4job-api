@@ -15,6 +15,11 @@ import { TokensClaimed } from '../../../domain/TokensClaimed';
 import { ClaimStarted } from '../../../domain/ClaimStarted';
 import { SensorId } from '../../../../sensors/domain/SensorId';
 import { ClaimTokens } from '../../../application/ClaimTokens';
+import { SensorRepository } from '../../../../sensors/domain/SensorRepository';
+import { BySensorId } from '../../../../sensors/domain/BySensorId';
+import { SensorLegacyId } from '../../../../sensors/domain/SensorLegacyId';
+import { BySensorLegacyId } from '../../../../sensors/domain/BySensorLegacyId';
+import { Sensor } from '../../../../sensors/domain/Sensor';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -22,14 +27,17 @@ export class TransactionsController {
     private transactionRepository: TransactionRepository,
     private paymentService: PaymentService,
     private claimTokensAction: ClaimTokens,
+    private sensorRepository: SensorRepository,
   ) {}
 
   @Post('/')
   async newTransaction(@Body() body: ReqNewTransactionDTO) {
-    const transaction = new Transaction(
-      new SensorId(body.sensorId),
-      body.tokens,
+    const sensors: Sensor[] = await this.sensorRepository.find(
+      new BySensorLegacyId(new SensorLegacyId(body.sensorId)),
     );
+    const sensor = sensors[0];
+
+    const transaction = new Transaction(sensor.id, body.tokens);
     if (body.id) {
       transaction.withId(new TransactionId(body.id));
     }
