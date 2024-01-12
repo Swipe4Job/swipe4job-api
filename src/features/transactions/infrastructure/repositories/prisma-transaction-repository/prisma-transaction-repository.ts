@@ -35,8 +35,6 @@ export class PrismaTransactionRepository implements TransactionRepository {
     const filters = this.prismaCriteria.convertFilters(mapCriteria.filters);
     const orders = this.prismaCriteria.convertOrders(mapCriteria.orders);
 
-    this.logger.debug(filters);
-
     try {
       result = await this.prisma.transactions.findMany({
         where: filters,
