@@ -15,27 +15,39 @@ import { PrismaProvider } from '../../../shared/infrastructure/services/prisma-c
 import { WalletAddress } from '../../../shared/domain/WalletAddress/WalletAddress';
 import { UserId } from '../../users/domain/UserID/UserId';
 import { NothingToClaim } from '../domain/NothingToClaim';
+import { SensorRepository } from '../../sensors/domain/SensorRepository';
+import { BySensorLegacyId } from '../../sensors/domain/BySensorLegacyId';
+import { SensorLegacyId } from '../../sensors/domain/SensorLegacyId';
+import { ApplicationLogger } from '../../../shared/infrastructure/services/application-logger/application-logger';
 
 @Injectable()
 export class ClaimTokens {
   constructor(
+    private logger: ApplicationLogger,
     private eventBus: EventBus,
     private transactionRepository: TransactionRepository,
     private paymentService: PaymentService,
     private prisma: PrismaProvider, // TODO implement sensor repository
+    private sensorRepository: SensorRepository,
   ) {}
 
   public async run(sensorId: number, _userId: string) {
+    const [sensor] = await this.sensorRepository.find(
+      new BySensorLegacyId(new SensorLegacyId(sensorId)),
+    );
+
+    this.logger.debug(sensor.serialize());
+
     const userId = new UserId(_userId);
     const transactions = await this.transactionRepository.find(
       new TransactionCriteria({
         filters: Filters.create([
           FilterGroup.create([
-            Filter.create('sensor_id', Operators.EQUAL, sensorId),
+            Filter.create('sensor_id', Operators.EQUAL, sensor.id.value),
             Filter.create(
               'state',
               Operators.NOT_EQUAL,
-              TransactionState.CLAIMED(),
+              TransactionState.CLAIMED().value,
             ),
           ]),
         ]),
@@ -44,6 +56,7 @@ export class ClaimTokens {
     );
 
     if (transactions.length === 0) {
+      this.logger.debug(transactions);
       throw new NothingToClaim();
     }
 

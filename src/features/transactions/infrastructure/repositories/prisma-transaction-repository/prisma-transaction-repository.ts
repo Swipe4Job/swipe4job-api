@@ -13,9 +13,14 @@ import { TransactionNotFound } from '../../../domain/TransactionRepository/Trans
 import { PrismaCriteriaService } from '../../../../../shared/infrastructure/services/PrismaCriteria/PrismaCriteriaService';
 import { WalletAddress } from '../../../../../shared/domain/WalletAddress/WalletAddress';
 import { ByTransactionId } from '../../../domain/TransactionRepository/ByTransactionId';
+import { FieldMapper, FieldMapping } from '../../../../../shared/domain/Criteria/FieldMapper';
 
 @Injectable()
 export class PrismaTransactionRepository implements TransactionRepository {
+  private fieldMapping: FieldMapping = {
+    sensor_id: 'sensor_uuid',
+  };
+
   constructor(
     private prisma: PrismaProvider,
     private logger: ApplicationLogger,
@@ -25,31 +30,28 @@ export class PrismaTransactionRepository implements TransactionRepository {
   async search(
     criteria: TransactionCriteria,
   ): Promise<Transaction[] | undefined> {
+    const mapCriteria = FieldMapper.mapCriteria(this.fieldMapping, criteria);
     let result;
-    const filters = this.prismaCriteria.convertFilters(criteria.filters);
-    const orders = this.prismaCriteria.convertOrders(criteria.orders);
+    const filters = this.prismaCriteria.convertFilters(mapCriteria.filters);
+    const orders = this.prismaCriteria.convertOrders(mapCriteria.orders);
 
     try {
       result = await this.prisma.transactions.findMany({
         where: filters,
         orderBy: orders,
-        take: criteria.limit.value || undefined,
-        skip: criteria.skip.value || undefined,
+        take: mapCriteria.limit.value || undefined,
+        skip: mapCriteria.skip.value || undefined,
       });
     } catch (err) {
       this.logger.error(err);
-      throw new PersistenceError('Error removing transaction');
+      throw new PersistenceError('Error searching transaction');
     }
 
-    if (!result) {
+    if (result.length === 0) {
       return;
     }
 
-    if (!result) {
-      return;
-    }
-
-    result.map((result) => {
+    return result.map((result) => {
       const transaction = new Transaction(
         new SensorId(result.sensor_uuid),
         result.tokens,
@@ -62,6 +64,8 @@ export class PrismaTransactionRepository implements TransactionRepository {
           new WalletAddress(result.destination_wallet),
         );
       }
+
+      return transaction;
     });
   }
 

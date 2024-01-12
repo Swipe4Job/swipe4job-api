@@ -4,7 +4,7 @@ export class ReqNewTransactionDTO {
   @IsUUID(4)
   @IsOptional()
   id?: string;
-  @IsUUID(4)
+  @IsUUID()
   sensorId!: string;
   @IsPositive()
   tokens!: number;

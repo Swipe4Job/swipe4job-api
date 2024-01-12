@@ -7,9 +7,10 @@ import { TransactionMigrationService } from './transaction-migration-service';
 import { PaymentService } from './services/payment/payment.service';
 import { AuthModule } from '../../auth/infrastructure/auth.module';
 import { ClaimTokens } from '../application/ClaimTokens';
+import { SensorsModule } from '../../sensors/infrastructure/sensors.module';
 
 @Module({
-  imports: [SharedProvidersModule, AuthModule],
+  imports: [SharedProvidersModule, AuthModule, SensorsModule],
   controllers: [TransactionsController],
   providers: [
     { provide: TransactionRepository, useClass: PrismaTransactionRepository },
