@@ -15,6 +15,11 @@ import { TokensClaimed } from '../../../domain/TokensClaimed';
 import { ClaimStarted } from '../../../domain/ClaimStarted';
 import { SensorId } from '../../../../sensors/domain/SensorId';
 import { ClaimTokens } from '../../../application/ClaimTokens';
+import { SensorRepository } from '../../../../sensors/domain/SensorRepository';
+import { BySensorId } from '../../../../sensors/domain/BySensorId';
+import { SensorLegacyId } from '../../../../sensors/domain/SensorLegacyId';
+import { BySensorLegacyId } from '../../../../sensors/domain/BySensorLegacyId';
+import { Sensor } from '../../../../sensors/domain/Sensor';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -26,6 +31,7 @@ export class TransactionsController {
 
   @Post('/')
   async newTransaction(@Body() body: ReqNewTransactionDTO) {
+    // TODO verify sensor exists
     const transaction = new Transaction(
       new SensorId(body.sensorId),
       body.tokens,
