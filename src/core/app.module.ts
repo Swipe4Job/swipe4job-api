@@ -1,6 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { SharedProvidersModule } from '../shared/infrastructure/services/shared-providers.module';
-import { TransactionsModule } from '../features/transactions/infrastructure/transactions.module';
 import { RequestLoggerMiddleware } from './request-logger.middleware';
 import { UsersControllersModule } from '../features/users/infrastructure/controllers/users-controllers.module';
 import { RouterModule } from '@nestjs/core';
@@ -12,7 +11,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
   imports: [
     EventEmitterModule.forRoot(),
     SharedProvidersModule,
-    TransactionsModule,
     UsersControllersModule,
     AuthModule,
     RouterModule.register([

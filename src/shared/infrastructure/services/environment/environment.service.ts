@@ -8,8 +8,6 @@ export interface EnvironmentVariables {
   PORT: number;
   JWT_SECRET: string;
   ENVIRONMENT: string;
-  WALLET_PRIVATE_KEY: '';
-  SMART_CONTRACT_ADDRESS: '';
 }
 
 @Injectable()
@@ -20,8 +18,6 @@ export class EnvironmentService {
     PORT: 3000,
     JWT_SECRET: '',
     ENVIRONMENT: 'production',
-    WALLET_PRIVATE_KEY: '',
-    SMART_CONTRACT_ADDRESS: '',
   };
 
   public get ENV(): EnvironmentVariables {

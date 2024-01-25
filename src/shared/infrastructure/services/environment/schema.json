@@ -14,13 +14,5 @@
   "ENVIRONMENT": {
     "type": "string",
     "required": false
-  },
-  "WALLET_PRIVATE_KEY": {
-    "type": "string",
-    "required": true
-  },
-  "SMART_CONTRACT_ADDRESS": {
-    "type": "string",
-    "required": true
   }
 }
