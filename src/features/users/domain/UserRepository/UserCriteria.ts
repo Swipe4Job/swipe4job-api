@@ -6,17 +6,16 @@ import { FieldValidator } from '../../../../shared/domain/Criteria/FieldValidato
 export class UserCriteria extends Criteria {
   private allowedFilterFields = [
     'name',
+    'lastName',
     'email',
-    'walletAddress',
     'phoneNumber',
     'id',
     'role',
-    'disabled',
   ];
   private allowedOrderFields = [
     'name',
+    'lastName',
     'email',
-    'walletAddress',
     'phoneNumber',
     'id',
     'role',
