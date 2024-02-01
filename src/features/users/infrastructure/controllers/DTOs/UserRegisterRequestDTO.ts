@@ -1,8 +1,4 @@
-import {
-  IsEmail,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UserRegisterRequestDTO {
   @IsString()
@@ -12,8 +8,11 @@ export class UserRegisterRequestDTO {
   email!: string;
 
   @IsString()
-  @IsOptional()
   lastName!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  role!: string;
 
   @IsString()
   phoneNumber!: string;

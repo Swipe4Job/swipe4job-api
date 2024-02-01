@@ -9,15 +9,6 @@ import { ApplicationLogger } from '../../../../../shared/infrastructure/services
 import { UserAuthTokenNotFound } from '../../../domain/users/UserAuthTokenNotFound';
 import { ByUserAuthTokenId } from '../../../domain/AuthTokenId/ByUserAuthTokenId';
 import { JWTService } from '../../../domain/JWTService';
-import {
-  FieldMapper,
-  FieldMapping,
-} from '../../../../../shared/domain/Criteria/FieldMapper';
-import { Criteria } from '@zertifier/criteria';
-
-const fieldMapping: FieldMapping = {
-  id: 'uuid',
-};
 
 @Injectable()
 export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
@@ -29,12 +20,9 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
   ) {}
 
   async delete(criteria: UserAuthTokenCriteria): Promise<void> {
-    const mappedCriteria = this.mapFields(criteria);
-    const filters = this.prismaCriteriaService.convertFilters(
-      mappedCriteria.filters,
-    );
+    const filters = this.prismaCriteriaService.convertFilters(criteria.filters);
     try {
-      await this.prisma.tokens.deleteMany({
+      await this.prisma.token.deleteMany({
         where: filters,
       });
     } catch (err) {
@@ -60,25 +48,22 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
 
     try {
       if (!tokens) {
-        await this.prisma.tokens.create({
+        await this.prisma.token.create({
           data: {
-            uuid: userAuthToken.id.value,
-            wallet_address: userAuthToken.payload.data.walletAddress,
-            expiration_date: userAuthToken.expirationDate,
+            id: userAuthToken.id.value,
+            expirationDate: userAuthToken.expirationDate,
             token: signedToken,
           },
         });
         return;
       }
-      await this.prisma.tokens.update({
+      await this.prisma.token.update({
         data: {
-          wallet_address: userAuthToken.payload.data.walletAddress,
-          expiration_date: userAuthToken.expirationDate,
+          expirationDate: userAuthToken.expirationDate,
           token: signedToken,
-          updated_at: new Date(),
         },
         where: {
-          uuid: userAuthToken.id.value,
+          id: userAuthToken.id.value,
         },
       });
     } catch (err) {
@@ -90,20 +75,15 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
   async search(
     criteria: UserAuthTokenCriteria,
   ): Promise<UserAuthToken[] | undefined> {
-    const mappedCriteria = this.mapFields(criteria);
-    const filters = this.prismaCriteriaService.convertFilters(
-      mappedCriteria.filters,
-    );
-    const orders = this.prismaCriteriaService.convertOrders(
-      mappedCriteria.orders,
-    );
+    const filters = this.prismaCriteriaService.convertFilters(criteria.filters);
+    const orders = this.prismaCriteriaService.convertOrders(criteria.orders);
     let result;
     try {
-      result = await this.prisma.tokens.findMany({
+      result = await this.prisma.token.findMany({
         where: filters,
         orderBy: orders as any,
-        skip: mappedCriteria.skip.value || undefined,
-        take: mappedCriteria.limit.value || undefined,
+        skip: criteria.skip.value || undefined,
+        take: criteria.limit.value || undefined,
       });
     } catch (err) {
       this.logger.error(err);
@@ -121,15 +101,5 @@ export class PrismaUserAuthTokenRepository implements UserAuthTokensRepository {
     }
 
     return tokens;
-  }
-
-  /**
-   * This is because the database now has two ids. Incremental id and uuid. This map the field id to uuid.
-   * This should be removed when migration is finished
-   * @param criteria
-   * @private
-   */
-  private mapFields(criteria: UserAuthTokenCriteria): Criteria {
-    return FieldMapper.mapCriteria(fieldMapping, criteria);
   }
 }

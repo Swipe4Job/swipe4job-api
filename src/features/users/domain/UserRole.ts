@@ -3,8 +3,13 @@ import { InvalidArgument } from '../../../shared/domain/InvalidArgument';
 
 export class UserRole extends StringValueObject {
   public static readonly ADMIN = new UserRole('ADMIN');
-  public static readonly CUSTOMER = new UserRole('CUSTOMER');
-  private static readonly allowedValues = [UserRole.ADMIN, UserRole.CUSTOMER];
+  public static readonly RECRUITER = new UserRole('RECRUITER');
+  public static readonly CANDIDATE = new UserRole('CANDIDATE');
+  private static readonly allowedValues = [
+    UserRole.ADMIN,
+    UserRole.RECRUITER,
+    UserRole.CANDIDATE,
+  ];
 
   protected constructor(value: string) {
     super(value);

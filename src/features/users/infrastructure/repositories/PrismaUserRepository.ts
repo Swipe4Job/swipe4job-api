@@ -14,17 +14,7 @@ import { UserNotFound } from '../../domain/UserRepository/UserNotFound';
 import { ByUserID } from '../../domain/UserID/ByUserID';
 import { UserPassword } from '../../domain/UserPassword';
 import { Injectable } from '@nestjs/common';
-import {
-  FieldMapper,
-  FieldMapping,
-} from '../../../../shared/domain/Criteria/FieldMapper';
-import { Criteria } from '@zertifier/criteria';
 import { UserLastName } from '../../domain/UserLastName';
-
-const fieldMapping: FieldMapping = {
-  id: 'uuid',
-  walletAddress: 'wallet_address',
-};
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
@@ -35,10 +25,7 @@ export class PrismaUserRepository implements UserRepository {
   ) {}
 
   async delete(criteria: UserCriteria): Promise<void> {
-    const mappedCriteria = this.mapFields(criteria);
-    const filters = this.prismaCriteriaService.convertFilters(
-      mappedCriteria.filters,
-    );
+    const filters = this.prismaCriteriaService.convertFilters(criteria.filters);
     try {
       await this.prisma.user.deleteMany({
         where: filters,
@@ -83,6 +70,7 @@ export class PrismaUserRepository implements UserRepository {
           name: user.name.value,
           role: user.role.value,
           phoneNumber: user.phoneNumber.value,
+          lastName: user.userLastName.value,
           password: user.password?.value,
         },
         where: { id: user.id.value },
@@ -91,20 +79,15 @@ export class PrismaUserRepository implements UserRepository {
   }
 
   async search(criteria: UserCriteria): Promise<Array<User> | undefined> {
-    const mappedCriteria = this.mapFields(criteria);
-    const filters = this.prismaCriteriaService.convertFilters(
-      mappedCriteria.filters,
-    );
-    const orders = this.prismaCriteriaService.convertOrders(
-      mappedCriteria.orders,
-    );
+    const filters = this.prismaCriteriaService.convertFilters(criteria.filters);
+    const orders = this.prismaCriteriaService.convertOrders(criteria.orders);
     let result;
     try {
       result = await this.prisma.user.findMany({
         where: filters,
         orderBy: orders as any,
-        skip: mappedCriteria.skip.value || undefined,
-        take: mappedCriteria.limit.value || undefined,
+        skip: criteria.skip.value || undefined,
+        take: criteria.limit.value || undefined,
       });
     } catch (err) {
       this.logger.error(err);
@@ -128,9 +111,5 @@ export class PrismaUserRepository implements UserRepository {
           : undefined,
       });
     });
-  }
-
-  private mapFields(criteria: UserCriteria): Criteria {
-    return FieldMapper.mapCriteria(fieldMapping, criteria);
   }
 }

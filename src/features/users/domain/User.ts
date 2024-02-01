@@ -19,6 +19,28 @@ export class User implements Serializer {
       lastName: this.userLastName.value,
     };
   }
+
+  public static async create(params: {
+    name: string;
+    email: string;
+    lastName: string;
+    role: string;
+    phoneNumber: string;
+    password?: string;
+  }) {
+    return new User({
+      id: UserId.random(),
+      lastName: new UserLastName(params.lastName),
+      name: new UserName(params.name),
+      email: new UserEmail(params.email),
+      phoneNumber: new PhoneNumber(params.phoneNumber),
+      role: UserRole.from(params.role),
+      password: params.password
+        ? await UserPassword.create(params.password)
+        : undefined,
+    });
+  }
+
   constructor(params: {
     id: UserId;
     name: UserName;
