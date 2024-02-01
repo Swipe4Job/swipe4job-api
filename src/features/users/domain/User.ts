@@ -1,57 +1,51 @@
 import { UserName } from './UserName';
 import { UserId } from './UserID/UserId';
-import { WalletAddress } from '../../../shared/domain/WalletAddress/WalletAddress';
 import { UserEmail } from './UserEmail/UserEmail';
 import { UserRole } from './UserRole';
 import { PhoneNumber } from './PhoneNumber/PhoneNumber';
 import { UserPassword } from './UserPassword';
 import { Serializer } from '../../../shared/domain/Serializer';
+import { UserLastName } from './UserLastName';
 
 export class User implements Serializer {
   serialize() {
     return {
       id: this.id.value,
       name: this.name.value,
-      walletAddress: this.walletAddress?.value,
       email: this.email.value,
       role: this.role.value,
       password: this.password?.value,
       phoneNumber: this.phoneNumber.value,
-      enabled: this.enabled,
+      lastName: this.userLastName.value,
     };
   }
   constructor(params: {
     id: UserId;
     name: UserName;
-    walletAddress?: WalletAddress;
     email: UserEmail;
+    lastName: UserLastName;
     role: UserRole;
     phoneNumber: PhoneNumber;
     password?: UserPassword;
-    enabled?: boolean;
   }) {
     this._id = params.id;
     this._name = params.name;
-    this._walletAddress = params.walletAddress;
     this._email = params.email;
     this._role = params.role;
     this._phoneNumber = params.phoneNumber;
     this._password = params.password;
-    this._enabled = params.enabled || true;
+    this._userLastName = params.lastName;
   }
 
-  private _enabled: boolean;
+  private _userLastName: UserLastName;
 
-  public enable() {
-    this._enabled = true;
+  withUserLastName(lastName: UserLastName) {
+    this._userLastName = lastName;
+    return this;
   }
 
-  public disable() {
-    this._enabled = false;
-  }
-
-  public get enabled(): boolean {
-    return this._enabled;
+  get userLastName(): UserLastName {
+    return this._userLastName;
   }
 
   private _password?: UserPassword;
@@ -70,12 +64,6 @@ export class User implements Serializer {
 
   get name(): UserName {
     return this._name;
-  }
-
-  private _walletAddress?: WalletAddress;
-
-  get walletAddress(): WalletAddress | undefined {
-    return this._walletAddress;
   }
 
   private _email: UserEmail;
@@ -118,11 +106,6 @@ export class User implements Serializer {
 
   withEmail(email: UserEmail): User {
     this._email = email;
-    return this;
-  }
-
-  withWalletAddress(walletAddress: WalletAddress): User {
-    this._walletAddress = walletAddress;
     return this;
   }
 

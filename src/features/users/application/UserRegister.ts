@@ -6,7 +6,6 @@ import { UserId } from '../domain/UserID/UserId';
 import { UserName } from '../domain/UserName';
 import { UserEmail } from '../domain/UserEmail/UserEmail';
 import { PhoneNumber } from '../domain/PhoneNumber/PhoneNumber';
-import { WalletAddress } from '../../../shared/domain/WalletAddress/WalletAddress';
 import { UserRole } from '../domain/UserRole';
 import { UserPassword } from '../domain/UserPassword';
 import { UserCriteria } from '../domain/UserRepository/UserCriteria';
@@ -17,6 +16,8 @@ import {
   Operators,
   Orders,
 } from '@zertifier/criteria';
+import { UserLastName } from '../domain/UserLastName';
+import { ByUserEmail } from "../domain/UserEmail/ByUserEmail";
 
 @Injectable()
 export class UserRegister {
@@ -25,34 +26,23 @@ export class UserRegister {
   public async run(params: {
     name: string;
     email: string;
-    walletAddress?: string;
+    lastName: string;
     phoneNumber: string;
     password?: string;
   }) {
     const user = new User({
       id: UserId.random(),
+      lastName: new UserLastName(params.lastName),
       name: new UserName(params.name),
       email: new UserEmail(params.email),
       phoneNumber: new PhoneNumber(params.phoneNumber),
-      walletAddress: params.walletAddress
-        ? new WalletAddress(params.walletAddress)
-        : undefined,
       role: UserRole.CUSTOMER,
       password: params.password
         ? await UserPassword.create(params.password)
         : undefined,
     });
     // Searching enabled users by id
-    const criteria = new UserCriteria({
-      filters: Filters.create([
-        FilterGroup.create([
-          Filter.create('email', Operators.EQUAL, user.email.value),
-          Filter.create('disabled', Operators.EQUAL, false),
-        ]),
-      ]),
-      orders: Orders.EMPTY(),
-    });
-    const users = await this.userRepository.search(criteria);
+    const users = await this.userRepository.search(new ByUserEmail(user.email));
     if (users) {
       // Cannot register new user
       throw new UserAlreadyRegistered();

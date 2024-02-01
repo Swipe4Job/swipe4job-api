@@ -1,6 +1,5 @@
 import {
   IsEmail,
-  IsEthereumAddress,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -12,9 +11,9 @@ export class UserRegisterRequestDTO {
   @IsEmail()
   email!: string;
 
-  @IsEthereumAddress()
+  @IsString()
   @IsOptional()
-  walletAddress?: string;
+  lastName!: string;
 
   @IsString()
   phoneNumber!: string;

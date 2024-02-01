@@ -8,13 +8,11 @@ import { ApiAuthTokenPayload } from '../ApiAuthToken';
 
 export type UserAuthTokenPayload = {
   userID: string;
-  walletAddress: string;
   role: string;
 };
 
 const examplePayload: UserAuthTokenPayload = {
   userID: '',
-  walletAddress: '',
   role: '',
 };
 

@@ -9,7 +9,6 @@ import { UserId } from '../../domain/UserID/UserId';
 import { UserEmail } from '../../domain/UserEmail/UserEmail';
 import { UserName } from '../../domain/UserName';
 import { UserRole } from '../../domain/UserRole';
-import { WalletAddress } from '../../../../shared/domain/WalletAddress/WalletAddress';
 import { PhoneNumber } from '../../domain/PhoneNumber/PhoneNumber';
 import { UserNotFound } from '../../domain/UserRepository/UserNotFound';
 import { ByUserID } from '../../domain/UserID/ByUserID';
@@ -20,6 +19,7 @@ import {
   FieldMapping,
 } from '../../../../shared/domain/Criteria/FieldMapper';
 import { Criteria } from '@zertifier/criteria';
+import { UserLastName } from '../../domain/UserLastName';
 
 const fieldMapping: FieldMapping = {
   id: 'uuid',
@@ -40,7 +40,7 @@ export class PrismaUserRepository implements UserRepository {
       mappedCriteria.filters,
     );
     try {
-      await this.prisma.users.deleteMany({
+      await this.prisma.user.deleteMany({
         where: filters,
       });
     } catch (err) {
@@ -64,32 +64,28 @@ export class PrismaUserRepository implements UserRepository {
     const users = await this.search(new ByUserID(user.id));
     if (!users) {
       // Create user
-      await this.prisma.users.create({
+      await this.prisma.user.create({
         data: {
-          uuid: user.id.value,
+          id: user.id.value,
           email: user.email.value,
           name: user.name.value,
           role: user.role.value,
-          phone_number: user.phoneNumber.value,
-          wallet_address: user.walletAddress?.value,
+          lastName: user.userLastName.value,
+          phoneNumber: user.phoneNumber.value,
           password: user.password?.value,
-          disabled: !user.enabled,
         },
       });
     } else {
       // Update users
-      await this.prisma.users.update({
+      await this.prisma.user.update({
         data: {
           email: user.email.value,
           name: user.name.value,
           role: user.role.value,
-          phone_number: user.phoneNumber.value,
-          wallet_address: user.walletAddress?.value,
+          phoneNumber: user.phoneNumber.value,
           password: user.password?.value,
-          disabled: !user.enabled,
-          updated_at: new Date(),
         },
-        where: { uuid: user.id.value },
+        where: { id: user.id.value },
       });
     }
   }
@@ -104,7 +100,7 @@ export class PrismaUserRepository implements UserRepository {
     );
     let result;
     try {
-      result = await this.prisma.users.findMany({
+      result = await this.prisma.user.findMany({
         where: filters,
         orderBy: orders as any,
         skip: mappedCriteria.skip.value || undefined,
@@ -121,18 +117,15 @@ export class PrismaUserRepository implements UserRepository {
 
     return result.map((entry) => {
       return new User({
-        id: new UserId(entry.uuid),
+        id: new UserId(entry.id),
         email: new UserEmail(entry.email),
         name: new UserName(entry.name),
         role: UserRole.from(entry.role),
-        walletAddress: entry.wallet_address
-          ? new WalletAddress(entry.wallet_address)
-          : undefined,
-        phoneNumber: new PhoneNumber(entry.phone_number),
+        phoneNumber: new PhoneNumber(entry.phoneNumber),
+        lastName: new UserLastName(entry.lastName),
         password: entry.password
           ? UserPassword.from(entry.password)
           : undefined,
-        enabled: !entry.disabled,
       });
     });
   }
