@@ -4,10 +4,17 @@ import { SharedProvidersModule } from '../../../../shared/infrastructure/service
 import { UserRegister } from '../../application/UserRegister';
 import { UserServicesModule } from '../services/user-services.module';
 import { UserRepositoriesModule } from '../repositories/user-repositories.module';
+import { ListUsers } from '../../application/ListUsers';
+import { AuthModule } from '../../../auth/infrastructure/auth.module';
 
 @Module({
-  providers: [UserRegister],
+  providers: [UserRegister, ListUsers],
   controllers: [UsersController],
-  imports: [SharedProvidersModule, UserServicesModule, UserRepositoriesModule],
+  imports: [
+    SharedProvidersModule,
+    UserServicesModule,
+    UserRepositoriesModule,
+    AuthModule,
+  ],
 })
 export class UsersControllersModule {}
