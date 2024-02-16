@@ -50,7 +50,6 @@ export class UsersController {
       new ByUserID(new UserId(userAuthToken.payload.data.userID)),
     );
 
-
     return HttpResponse.success("T'hem trobat!").withData(user);
   }
 }
