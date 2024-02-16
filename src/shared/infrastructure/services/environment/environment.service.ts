@@ -52,6 +52,7 @@ export class EnvironmentService {
       }
     }
 
+    console.log(this._environmentVariables.DATABASE_URL);
     return this._environmentVariables;
   }
 }

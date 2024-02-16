@@ -6,6 +6,7 @@
 !.npmrc
 !prisma
 !tsconfig.*
+!pnpm-lock.yaml
 
 
 #.env
