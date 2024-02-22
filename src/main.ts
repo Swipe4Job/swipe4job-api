@@ -20,13 +20,13 @@ async function bootstrap() {
   app.useLogger(logger);
   const environment = app.get(EnvironmentService);
 
-  const allowedOrigins = ['https://zertiair-app.zertifier.com'];
-  if (environment.ENV.ENVIRONMENT === 'development') {
-    allowedOrigins.push('http://localhost:4200');
-  }
-  app.enableCors({
-    origin: allowedOrigins,
-  });
+  //const allowedOrigins = ['https://zertiair-app.zertifier.com'];
+  //if (environment.ENV.ENVIRONMENT === 'development') {
+    //allowedOrigins.push('http://localhost:4200');
+  //}
+  //app.enableCors({
+    //origin: allowedOrigins,
+  //});
   app.use(helmet());
 
   // Note the order of the filters is important
@@ -49,9 +49,9 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
 
   const config = new DocumentBuilder()
-    .setTitle('Zertiair')
-    .setDescription('Zertiair API description')
-    .setVersion('2.0')
+    .setTitle('swipe4job')
+    .setDescription('swipe4job API description')
+    .setVersion('1.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
