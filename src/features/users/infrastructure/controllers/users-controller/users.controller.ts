@@ -52,4 +52,9 @@ export class UsersController {
 
     return HttpResponse.success("T'hem trobat!").withData(user);
   }
+  @Get('test')
+  async getAllUsers() {
+    const users = await this.listUsers.run(UserCriteria.NONE());
+    return users.map((user) => new UsersListResponseDTO(user));
+  }
 }
