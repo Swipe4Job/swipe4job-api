@@ -23,7 +23,7 @@ export class UserRegisterRequestDTO {
   @IsString()
   phoneNumber!: string;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
   password?: string;
