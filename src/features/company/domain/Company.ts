@@ -1,31 +1,39 @@
 import { Serializer } from '../../../shared/domain/Serializer';
+import { CompanyPhone } from './Phone/CompanyPhone';
+import { Sector } from './Sector';
+import { CompanyName } from './CompanyName';
+import { CompanyCIF } from './CompanyCIF';
+import { CompanySize } from './CompanySize';
+import { CompanyDescription } from './CompanyDescription';
+import { CompanyId } from './CompanyID/CompanyId';
 
 export class Company implements Serializer {
-  private _sector: string;
-  private _phone: number;
-  private _name: string;
-  private _CIF: string;
-  private _description: string;
-  private _companySize: string;
-
+  private _sector: Sector;
+  private _phone: CompanyPhone;
+  private _name: CompanyName;
+  private _CIF: CompanyCIF;
+  private _id: CompanyId;
+  private _description: CompanyDescription;
+  private _companySize: CompanySize;
   serialize() {
     return {
-      sector: this.sector,
-      phone: this.phone,
-      name: this.name,
-      CIF: this.CIF,
-      description: this.description,
-      companySize: this.companySize,
+      id: this.id.value,
+      sector: this.sector.value,
+      phone: this.phone.value,
+      name: this.name.value,
+      CIF: this.CIF.value,
+      description: this.description.value,
+      companySize: this.companySize.value,
     };
   }
-
   constructor(params: {
-    sector: string;
-    phone: number;
-    name: string;
-    CIF: string;
-    description: string;
-    companySize: string;
+    id: CompanyId;
+    sector: Sector;
+    phone: CompanyPhone;
+    name: CompanyName;
+    CIF: CompanyCIF;
+    description: CompanyDescription;
+    companySize: CompanySize;
   }) {
     this._sector = params.sector;
     this._phone = params.phone;
@@ -33,32 +41,53 @@ export class Company implements Serializer {
     this._CIF = params.CIF;
     this._description = params.description;
     this._companySize = params.companySize;
+    this._id = params.id;
   }
 
-  get phone(): number {
-    return this._phone;
+  public static async create(params: {
+    sector: string;
+    phone: string;
+    name: string;
+    CIF: string;
+    description: string;
+    companySize: string;
+  }) {
+    return new Company({
+      id: CompanyId.random(),
+      sector: Sector.from(params.sector),
+      phone: new CompanyPhone(params.phone),
+      name: new CompanyName(params.name),
+      CIF: new CompanyCIF(params.CIF),
+      description: new CompanyDescription(params.description),
+      companySize: CompanySize.from(params.companySize),
+    });
   }
 
-  get CIF(): string {
-    return this._CIF;
-  }
-
-  get description() {
-    return this._description;
-  }
-
-  get sector(): string {
+  get sector(): Sector {
     return this._sector;
   }
 
-  get name(): string {
+  get phone(): CompanyPhone {
+    return this._phone;
+  }
+
+  get name(): CompanyName {
     return this._name;
   }
 
-  get companySize(): string {
+  get CIF(): CompanyCIF {
+    return this._CIF;
+  }
+
+  get description(): CompanyDescription {
+    return this._description;
+  }
+
+  get companySize(): CompanySize {
     return this._companySize;
   }
-  /*ja que ara companySize i sector tenen la seva propia clase
- no se si se hauria de canviar de una manera semblant a el ROLE
-  */
+
+  get id(): CompanyId {
+    return this._id;
+  }
 }

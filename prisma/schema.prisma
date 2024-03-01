@@ -44,3 +44,13 @@ model User {
 
   @@map("users")
 }
+model Company {
+  id          String     @id
+  sector      String
+  phone       String
+  name        String
+  CIF         String     @unique()
+  description String
+  companySize String
+  @@map("companies")
+}

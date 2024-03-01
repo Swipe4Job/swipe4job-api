@@ -9,6 +9,7 @@ export class CompanyCriteria extends Criteria {
     'phone',
     'name',
     'CIF',
+    'id',
     'companySize',
   ];
   private allowedOrderFields = [
@@ -16,6 +17,7 @@ export class CompanyCriteria extends Criteria {
     'phone',
     'name',
     'CIF',
+    'id',
     'companySize',
   ];
   constructor(params: {
@@ -30,13 +32,14 @@ export class CompanyCriteria extends Criteria {
     FieldValidator.hasValidFilters(filters, this.allowedFilterFields);
     FieldValidator.hasValidOrders(orders, this.allowedOrderFields);
   }
-  public static fromCriteria(criteria: Criteria) {
-    return new CompanyCriteria(criteria);
-  }
+
   public static override NONE(): CompanyCriteria {
     return new CompanyCriteria({
       filters: Filters.EMPTY(),
       orders: Orders.EMPTY(),
     });
+  }
+  public static fromCriteria(criteria: Criteria) {
+    return new CompanyCriteria(criteria);
   }
 }

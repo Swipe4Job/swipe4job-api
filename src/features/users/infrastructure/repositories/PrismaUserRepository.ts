@@ -42,7 +42,6 @@ export class PrismaUserRepository implements UserRepository {
     if (!users) {
       throw new UserNotFound();
     }
-
     return users;
   }
 
