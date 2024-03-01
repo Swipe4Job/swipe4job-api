@@ -20,12 +20,15 @@ async function bootstrap() {
   app.useLogger(logger);
   const environment = app.get(EnvironmentService);
 
+  app.enableCors({
+    origin: '*',
+  });
   //const allowedOrigins = ['https://zertiair-app.zertifier.com'];
   //if (environment.ENV.ENVIRONMENT === 'development') {
-    //allowedOrigins.push('http://localhost:4200');
+  //allowedOrigins.push('http://localhost:4200');
   //}
   //app.enableCors({
-    //origin: allowedOrigins,
+  //origin: allowedOrigins,
   //});
   app.use(helmet());
 
