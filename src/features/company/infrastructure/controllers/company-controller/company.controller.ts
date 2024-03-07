@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
 import { CriteriaCodec } from '../../../../../shared/infrastructure/services/criteria-codec/CriteriaCodec';
-import { CompanyRepository } from '../../../domain/CompanyRepository.ts/CompanyRepository';
 import { CompanyRegister } from '../../../application/CompanyRegister';
 import { ListCompanies } from '../../../application/ListCompanies';
 import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse';
@@ -11,7 +10,6 @@ import { CompanyRegisterRequestDTO } from '../DTOs/CompanyRegisterRequestDTO';
 @Controller('company')
 export class CompanyController {
   constructor(
-    private companyRepository: CompanyRepository,
     private companyRegister: CompanyRegister,
     private criteriaCodec: CriteriaCodec,
     private listCompanies: ListCompanies,
@@ -27,9 +25,14 @@ export class CompanyController {
       companies.map((company) => new CompanyListResponseDTO(company)),
     );
   }
-  @Post('register')
+  @Post('')
   async registerCompany(@Body() body: CompanyRegisterRequestDTO) {
     await this.companyRegister.run(body);
     return HttpResponse.success('Company registered successfully');
+  }
+
+  @Put(':id')
+  async updateCompany() {
+
   }
 }

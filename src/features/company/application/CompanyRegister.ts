@@ -16,10 +16,17 @@ export class CompanyRegister {
     phone: string;
     name: string;
     CIF: string;
-    description: string;
+    description?: string;
     companySize: string;
   }) {
-    const company = await Company.create(params);
+    const company = await Company.create({
+      name: params.name,
+      sector: params.sector,
+      phone: params.phone,
+      CIF: params.CIF,
+      companySize: params.companySize,
+      description: params.description || '',
+    });
     const criteria = new CompanyCriteria({
       filters: Filters.create([
         FilterGroup.create([
