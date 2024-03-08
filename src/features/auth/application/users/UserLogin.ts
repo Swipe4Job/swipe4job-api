@@ -9,15 +9,11 @@ export class UserLogin {
     private authSessionService: UserAuthSessionService,
   ) {}
 
-  async web2(
-    user: string,
-    password: string,
-  ): Promise<{ refresh: string; access: string }> {
+  async web2(user: string, password: string): Promise<{ access: string }> {
     const verifiedUser = await this.userContextService.validCredentials(
       user,
       password,
     );
     return this.authSessionService.createSession(verifiedUser);
   }
-  web3() {}
 }

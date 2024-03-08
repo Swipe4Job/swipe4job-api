@@ -14,13 +14,9 @@ export class AuthUsersController {
 
   @Post('login')
   async userLogin(@Body() { email, password }: UserLoginRequestDTO) {
-    const { access, refresh } = await this.userLoginUseCase.web2(
-      email,
-      password,
-    );
+    const { access } = await this.userLoginUseCase.web2(email, password);
     return HttpResponse.success('Logged in successfully').withData({
       accessToken: access,
-      refreshToken: refresh,
     });
   }
 

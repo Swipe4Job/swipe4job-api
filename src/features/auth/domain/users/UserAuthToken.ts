@@ -40,7 +40,7 @@ export class UserAuthToken extends AuthToken<UserAuthTokenPayload> {
   }
 
   public static createAccessToken(data: UserAuthTokenPayload) {
-    const expirationDate = moment().add(2, 'hours').toDate();
+    const expirationDate = moment().add(6, 'hours').toDate();
     return new UserAuthToken(data, 'access').withExpirationDate(expirationDate);
   }
 

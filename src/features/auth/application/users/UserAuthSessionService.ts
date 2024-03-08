@@ -16,22 +16,17 @@ export class UserAuthSessionService {
     private jwtService: JWTService,
   ) {}
 
-  public async createSession(
-    user: User,
-  ): Promise<{ refresh: string; access: string }> {
+  public async createSession(user: User): Promise<{ access: string }> {
     const authTokenData: UserAuthTokenPayload = {
       userID: user.id.value,
       role: user.role.value,
     };
-    const refresh = UserAuthToken.createRefreshToken(authTokenData);
     const access = UserAuthToken.createAccessToken(authTokenData);
 
-    await this.userAuthTokenRepository.save(refresh);
-    const signedRefreshToken = await this.jwtService.sign(refresh);
+    await this.userAuthTokenRepository.save(access);
     const signedAccessToken = await this.jwtService.sign(access);
 
     return {
-      refresh: signedRefreshToken,
       access: signedAccessToken,
     };
   }
