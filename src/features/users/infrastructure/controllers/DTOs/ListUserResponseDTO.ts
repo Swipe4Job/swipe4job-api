@@ -1,11 +1,18 @@
 import { User } from '../../../domain/User';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class UsersListResponseDTO {
+export class ListUserResponseDTO {
+  @ApiProperty()
   id: string;
+  @ApiProperty()
   name: string;
+  @ApiProperty()
   lastName: string;
+  @ApiProperty()
   email: string;
+  @ApiProperty()
   role: string;
+  @ApiProperty()
   phoneNumber: string;
 
   constructor(user: User) {
