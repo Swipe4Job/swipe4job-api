@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CriteriaCodec } from '../../../../../shared/infrastructure/services/criteria-codec/CriteriaCodec';
 import { CompanyRegister } from '../../../application/CompanyRegister';
 import { ListCompanies } from '../../../application/ListCompanies';
@@ -15,6 +24,7 @@ import { CompanyName } from '../../../domain/CompanyName';
 import { CompanyDescription } from '../../../domain/CompanyDescription';
 import { Sector } from '../../../domain/Sector';
 import { CompanyPhone } from '../../../domain/Phone/CompanyPhone';
+import { CompanyDelete } from '../../../application/company-delete/company-delete';
 
 @Controller('company')
 export class CompanyController {
@@ -23,6 +33,7 @@ export class CompanyController {
     private criteriaCodec: CriteriaCodec,
     private listCompanies: ListCompanies,
     private companyUpdate: CompanyUpdate,
+    private companyDelete: CompanyDelete,
   ) {}
 
   @Get()
@@ -56,5 +67,13 @@ export class CompanyController {
       phone: new CompanyPhone(body.phone),
     });
     await this.companyUpdate.run(company);
+  }
+
+  @Delete()
+  async deleteCompany(@Query('criteria') encodedCriteria: string) {
+    const companyCriteria = encodedCriteria
+      ? CompanyCriteria.fromCriteria(this.criteriaCodec.decode(encodedCriteria))
+      : CompanyCriteria.NONE();
+    await this.companyDelete.run(companyCriteria);
   }
 }

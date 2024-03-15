@@ -15,6 +15,7 @@ import { TransformInterceptor } from '../src/core/transform/transform.intercepto
 import { JWTService } from '../src/features/auth/domain/JWTService';
 import { ApiAuthToken } from '../src/features/auth/domain/ApiAuthToken';
 import { UserAuthToken } from '../src/features/auth/domain/users/UserAuthToken';
+import { UserLastName } from '../src/features/users/domain/UserLastName';
 
 describe('RootAuthController', () => {
   const wallet = ethers.Wallet.createRandom();
@@ -34,9 +35,9 @@ describe('RootAuthController', () => {
 
   it('should verify user auth tokens', async () => {
     const user = new User({
+      lastName: new UserLastName('example'),
       id: UserId.random(),
       role: UserRole.ADMIN,
-      walletAddress: new WalletAddress(wallet.address),
       password: await UserPassword.create('1234'),
       phoneNumber: new PhoneNumber('1234'),
       email: new UserEmail('example@email.com'),
@@ -44,7 +45,6 @@ describe('RootAuthController', () => {
     });
 
     const accessToken = UserAuthToken.createAccessToken({
-      walletAddress: user.walletAddress!.value,
       role: user.role.value,
       userID: user.id.value,
     });
