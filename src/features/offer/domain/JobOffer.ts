@@ -51,7 +51,7 @@ export class JobOffer {
     this._responsibilities = params.responsibilities;
     this._requirements = params.requirements;
     this._jobType = JobType.from(params.jobType);
-    this._workingDay = WorkingDay.from(params.workingHours);
+    this._workingDay = WorkingDay.from(params.workingDay);
     this._skills = params.skills;
     this._workingHours = params.workingHours;
     this._departmentOrganisation = params.departmentOrganisation;

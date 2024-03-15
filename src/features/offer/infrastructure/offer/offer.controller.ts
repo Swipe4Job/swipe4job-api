@@ -49,7 +49,10 @@ export class OfferController {
   async saveOffer(@Body() body: SaveJobOfferDTO) {
     const offer = new JobOffer({
       ...body,
-      publicationDate: moment(body.publicationDate).toDate(),
+      publicationDate: moment(
+        body.publicationDate,
+        'YYYY-MM-DD HH:mm',
+      ).toDate(),
     });
 
     await this.offerRepository.save(offer);

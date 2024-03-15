@@ -19,9 +19,9 @@ export class WorkingDay extends StringValueObject {
       }
     }
     throw new InvalidArgument(
-      `Invalid working day. Allowed values [${WorkingDay.allowedValues.join(
-        ', ',
-      )}]`,
+      `Invalid working day. Allowed values [${WorkingDay.allowedValues
+        .map((w) => w.value)
+        .join(', ')}]`,
     );
   }
 }
