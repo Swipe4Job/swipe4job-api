@@ -16,6 +16,7 @@ import moment from 'moment';
 import { JobOfferRepository } from '../../domain/JobOfferRepository/JobOfferRepository';
 import { HttpResponse } from '../../../../shared/infrastructure/HttpResponse';
 import { ByJobOfferId } from '../../domain/ByJobOfferId';
+import { ApiTags } from '@nestjs/swagger';
 
 function formatJobOffer(offer: JobOffer) {
   return {
@@ -26,6 +27,7 @@ function formatJobOffer(offer: JobOffer) {
   };
 }
 
+@ApiTags('offer')
 @Controller('offer')
 export class OfferController {
   constructor(

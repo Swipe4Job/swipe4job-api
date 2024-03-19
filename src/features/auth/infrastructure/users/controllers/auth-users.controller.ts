@@ -4,7 +4,9 @@ import { UserLoginRequestDTO } from './DTOs/UserLoginRequestDTO';
 import { HttpResponse } from '../../../../../shared/infrastructure/HttpResponse';
 import { UserLogoutRequestDTO } from './DTOs/UserLogoutRequestDTO';
 import { UserLogout } from '../../../application/users/UserLogout';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('users')
 export class AuthUsersController {
   constructor(

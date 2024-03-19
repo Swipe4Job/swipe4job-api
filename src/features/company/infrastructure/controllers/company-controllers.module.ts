@@ -6,9 +6,10 @@ import { ListCompanies } from '../../application/ListCompanies';
 import { AuthModule } from '../../../auth/infrastructure/auth.module';
 import { CompanyRepositoriesModule } from '../repositories/company-repositories.module';
 import { CompanyUpdate } from '../../application/company-update';
+import { CompanyDelete } from '../../application/company-delete';
 
 @Module({
-  providers: [CompanyRegister, ListCompanies, CompanyUpdate],
+  providers: [CompanyRegister, ListCompanies, CompanyUpdate, CompanyDelete],
   controllers: [CompanyController],
   imports: [SharedProvidersModule, CompanyRepositoriesModule, AuthModule],
 })

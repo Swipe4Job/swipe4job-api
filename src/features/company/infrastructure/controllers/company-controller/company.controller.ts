@@ -24,8 +24,10 @@ import { CompanyName } from '../../../domain/CompanyName';
 import { CompanyDescription } from '../../../domain/CompanyDescription';
 import { Sector } from '../../../domain/Sector';
 import { CompanyPhone } from '../../../domain/Phone/CompanyPhone';
-import { CompanyDelete } from '../../../application/company-delete/company-delete';
+import { CompanyDelete } from '../../../application/company-delete';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('company')
 @Controller('company')
 export class CompanyController {
   constructor(

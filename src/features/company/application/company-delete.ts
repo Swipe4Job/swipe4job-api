@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CompanyRepository } from '../../domain/CompanyRepository.ts/CompanyRepository';
-import { CompanyCriteria } from '../../domain/CompanyRepository.ts/CompanyCriteria';
+import { CompanyRepository } from '../domain/CompanyRepository.ts/CompanyRepository';
+import { CompanyCriteria } from '../domain/CompanyRepository.ts/CompanyCriteria';
 
 @Injectable()
 export class CompanyDelete {
