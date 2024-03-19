@@ -6,6 +6,7 @@ import { RouterModule } from '@nestjs/core';
 import { AuthModule } from '../features/auth/infrastructure/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { CompanyControllersModule } from '../features/company/infrastructure/controllers/company-controllers.module';
+import { OfferControllersModule } from '../features/offer/infrastructure/offer-controllers.module';
 
 @Module({
   providers: [RequestLoggerMiddleware],
@@ -21,6 +22,7 @@ import { CompanyControllersModule } from '../features/company/infrastructure/con
       },
     ]),
     CompanyControllersModule,
+    OfferControllersModule,
   ],
 })
 export class AppModule implements NestModule {

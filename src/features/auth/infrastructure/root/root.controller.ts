@@ -2,7 +2,9 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { VerifyAuthTokenRequestDTO } from './DTOs/VerifyAuthTokenRequestDTO';
 import { VerifyAuthToken } from '../../application/VerifyAuthToken';
 import { HttpResponse } from '../../../../shared/infrastructure/HttpResponse';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller()
 export class RootController {
   constructor(private verifyAuthTokenUseCase: VerifyAuthToken) {}

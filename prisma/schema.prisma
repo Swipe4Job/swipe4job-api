@@ -41,16 +41,40 @@ model User {
   password    String?
   apiTokens   ApiToken[]
   tokens      Token[]
+  offers      Offer[]
 
   @@map("users")
 }
+
 model Company {
-  id          String     @id
+  id          String @id
   sector      String
   phone       String
   name        String
-  CIF         String     @unique()
+  CIF         String @unique()
   description String
   companySize String
+
   @@map("companies")
+}
+
+model Offer {
+  id                     String   @id
+  title                  String
+  companyName            String
+  description            String
+  responsabilities       String
+  requirements           String
+  jobType                String
+  contractType           String
+  workingDay             String
+  skills                 String
+  salaryRange            String
+  workingHours           String
+  departmentOrganization String
+  publicationDate        DateTime
+  recruiter              User     @relation(fields: [recruiterId], references: [id])
+  recruiterId            String
+
+  @@map("offers")
 }

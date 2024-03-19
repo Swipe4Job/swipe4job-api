@@ -16,10 +16,11 @@ import { UserId } from '../../../domain/UserID/UserId';
 import {
   ApiExtraModels,
   ApiOkResponse,
-  ApiResponse,
+  ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -28,6 +29,7 @@ export class UsersController {
     private criteriaCodec: CriteriaCodec,
     private listUsers: ListUsers,
   ) {}
+
   @Get()
   async getUsers(@Query('criteria') encodedCriteria: string) {
     const userCriteria = encodedCriteria
