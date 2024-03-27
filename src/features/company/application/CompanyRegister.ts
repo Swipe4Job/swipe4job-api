@@ -6,6 +6,7 @@ import { Filters, Operators } from '@zertifier/criteria/dist/Filters';
 import { Filter, FilterGroup } from '@zertifier/criteria';
 import { Orders } from '@zertifier/criteria/dist/Orders';
 import { CompanyAlreadyRegistered } from '../domain/CompanyAlreadyRegistered';
+import { UserId } from '../../users/domain/UserID/UserId';
 
 @Injectable()
 export class CompanyRegister {
@@ -16,11 +17,13 @@ export class CompanyRegister {
     phone: string;
     name: string;
     CIF: string;
+    recruiterId: string;
     description?: string;
     companySize: string;
   }) {
     const company = await Company.create({
       name: params.name,
+      recruiterId: params.recruiterId,
       sector: params.sector,
       phone: params.phone,
       CIF: params.CIF,
@@ -42,6 +45,7 @@ export class CompanyRegister {
     if (result) {
       throw new CompanyAlreadyRegistered();
     }
+    // TODO check recruiter id
     await this.companyRepository.save(company);
   }
 }

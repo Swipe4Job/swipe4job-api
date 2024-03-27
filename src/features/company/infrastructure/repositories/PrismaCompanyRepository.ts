@@ -15,6 +15,7 @@ import { CompanyDescription } from '../../domain/CompanyDescription';
 import { CompanySize } from '../../domain/CompanySize';
 import { CompanyCIF } from '../../domain/CompanyCIF';
 import { ByCompanyId } from '../../domain/CompanyID/ByCompanyId';
+import { UserId } from '../../../users/domain/UserID/UserId';
 
 @Injectable()
 export class PrismaCompanyRepository implements CompanyRepository {
@@ -52,6 +53,7 @@ export class PrismaCompanyRepository implements CompanyRepository {
     return result.map((entry) => {
       return new Company({
         id: new CompanyId(entry.id),
+        recruiterId: new UserId(entry.recruiterId),
         sector: Sector.from(entry.sector),
         phone: new CompanyPhone(entry.phone),
         name: new CompanyName(entry.name),
@@ -68,6 +70,7 @@ export class PrismaCompanyRepository implements CompanyRepository {
       await this.prisma.company.create({
         data: {
           id: company.id.value,
+          recruiterId: company.recruiterId.value,
           sector: company.sector.value,
           phone: company.phone.value,
           name: company.name.value,

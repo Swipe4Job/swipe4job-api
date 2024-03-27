@@ -26,6 +26,7 @@ import { Sector } from '../../../domain/Sector';
 import { CompanyPhone } from '../../../domain/Phone/CompanyPhone';
 import { CompanyDelete } from '../../../application/company-delete';
 import { ApiTags } from '@nestjs/swagger';
+import { UserId } from '../../../../users/domain/UserID/UserId';
 
 @ApiTags('company')
 @Controller('company')
@@ -61,6 +62,7 @@ export class CompanyController {
   ) {
     const company = new Company({
       id: new CompanyId(id),
+      recruiterId: new UserId(body.recruiterId),
       companySize: CompanySize.from(body.companySize),
       CIF: new CompanyCIF(body.CIF),
       name: new CompanyName(body.name),
@@ -68,6 +70,7 @@ export class CompanyController {
       sector: Sector.from(body.sector),
       phone: new CompanyPhone(body.phone),
     });
+    // TODO check recruiter id
     await this.companyUpdate.run(company);
   }
 

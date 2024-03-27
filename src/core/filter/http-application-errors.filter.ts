@@ -13,9 +13,10 @@ export class HttpApplicationErrorsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    if (error.showStack) {
-      this.logger.error(error.stack);
-    }
+    // if (error.showStack) {
+    //   this.logger.error(error.stack);
+    // }
+    this.logger.error(error.stack);
 
     const statusCode = ErrorCodeMapper.toHttpStatusCode(error.errorCode);
     response

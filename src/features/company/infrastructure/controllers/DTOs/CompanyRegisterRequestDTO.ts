@@ -30,4 +30,9 @@ export class CompanyRegisterRequestDTO {
   @IsString()
   @IsNotEmpty()
   companySize!: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  recruiterId!: string;
 }

@@ -54,6 +54,7 @@ model Company {
   CIF         String @unique()
   description String
   companySize String
+  recruiterId String
 
   @@map("companies")
 }
@@ -77,4 +78,17 @@ model Offer {
   recruiterId            String
 
   @@map("offers")
+}
+
+model CandidateCV {
+  id             String @id
+  candidateId    String
+  description    String
+  studies        String
+  softSkills     String
+  name           String
+  lastname       String
+  location       String
+  languages      String
+  jobExperiences String
 }

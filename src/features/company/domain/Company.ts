@@ -6,28 +6,12 @@ import { CompanyCIF } from './CompanyCIF';
 import { CompanySize } from './CompanySize';
 import { CompanyDescription } from './CompanyDescription';
 import { CompanyId } from './CompanyID/CompanyId';
+import { UserId } from '../../users/domain/UserID/UserId';
 
 export class Company implements Serializer {
-  private _sector: Sector;
-  private _phone: CompanyPhone;
-  private _name: CompanyName;
-  private _CIF: CompanyCIF;
-  private _id: CompanyId;
-  private _description: CompanyDescription;
-  private _companySize: CompanySize;
-  serialize() {
-    return {
-      id: this.id.value,
-      sector: this.sector.value,
-      phone: this.phone.value,
-      name: this.name.value,
-      CIF: this.CIF.value,
-      description: this.description.value,
-      companySize: this.companySize.value,
-    };
-  }
   constructor(params: {
     id: CompanyId;
+    recruiterId: UserId;
     sector: Sector;
     phone: CompanyPhone;
     name: CompanyName;
@@ -42,9 +26,59 @@ export class Company implements Serializer {
     this._description = params.description;
     this._companySize = params.companySize;
     this._id = params.id;
+    this._recruiterId = params.recruiterId;
+  }
+
+  private _sector: Sector;
+
+  get sector(): Sector {
+    return this._sector;
+  }
+
+  private _phone: CompanyPhone;
+
+  get phone(): CompanyPhone {
+    return this._phone;
+  }
+
+  private _name: CompanyName;
+
+  get name(): CompanyName {
+    return this._name;
+  }
+
+  private _CIF: CompanyCIF;
+
+  get CIF(): CompanyCIF {
+    return this._CIF;
+  }
+
+  private _id: CompanyId;
+
+  get id(): CompanyId {
+    return this._id;
+  }
+
+  private _description: CompanyDescription;
+
+  get description(): CompanyDescription {
+    return this._description;
+  }
+
+  private _companySize: CompanySize;
+
+  get companySize(): CompanySize {
+    return this._companySize;
+  }
+
+  private _recruiterId: UserId;
+
+  get recruiterId(): UserId {
+    return this._recruiterId;
   }
 
   public static async create(params: {
+    recruiterId: string;
     sector: string;
     phone: string;
     name: string;
@@ -54,6 +88,7 @@ export class Company implements Serializer {
   }) {
     return new Company({
       id: CompanyId.random(),
+      recruiterId: new UserId(params.recruiterId),
       sector: Sector.from(params.sector),
       phone: new CompanyPhone(params.phone),
       name: new CompanyName(params.name),
@@ -63,31 +98,15 @@ export class Company implements Serializer {
     });
   }
 
-  get sector(): Sector {
-    return this._sector;
-  }
-
-  get phone(): CompanyPhone {
-    return this._phone;
-  }
-
-  get name(): CompanyName {
-    return this._name;
-  }
-
-  get CIF(): CompanyCIF {
-    return this._CIF;
-  }
-
-  get description(): CompanyDescription {
-    return this._description;
-  }
-
-  get companySize(): CompanySize {
-    return this._companySize;
-  }
-
-  get id(): CompanyId {
-    return this._id;
+  serialize() {
+    return {
+      id: this.id.value,
+      sector: this.sector.value,
+      phone: this.phone.value,
+      name: this.name.value,
+      CIF: this.CIF.value,
+      description: this.description.value,
+      companySize: this.companySize.value,
+    };
   }
 }

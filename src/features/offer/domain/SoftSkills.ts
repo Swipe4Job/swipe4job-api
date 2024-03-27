@@ -66,11 +66,9 @@ export class SoftSkills extends StringValueObject {
       }
     }
     throw new InvalidArgument(
-      `Invalid user role. Allowed values [${SoftSkills.allowedValues.join(
+      `Invalid soft skill. Allowed values [${SoftSkills.allowedValues.join(
         ', ',
       )}]`,
     );
   }
-
-
 }
