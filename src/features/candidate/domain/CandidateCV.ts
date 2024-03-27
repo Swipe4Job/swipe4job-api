@@ -143,12 +143,12 @@ export class CandidateCV implements Serializer {
 
   serialize() {
     return {
-      languages: this.languages.map((l) => l.value),
-      jobExperiences: this.jobExperiences.map((j) => j.value),
+      languages: this.languages.map((l) => l.serialize()),
+      jobExperiences: this.jobExperiences.map((j) => j.serialize()),
       name: this.name,
       lastname: this.lastname,
       location: this.location,
-      studies: this.studies.map((s) => s.value),
+      studies: this.studies.map((s) => s.serialize()),
       description: this.description,
       softSkills: Array.from(this.softSkills).map((s) => s.value),
     };
