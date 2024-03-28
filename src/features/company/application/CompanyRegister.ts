@@ -6,7 +6,6 @@ import { Filters, Operators } from '@zertifier/criteria/dist/Filters';
 import { Filter, FilterGroup } from '@zertifier/criteria';
 import { Orders } from '@zertifier/criteria/dist/Orders';
 import { CompanyAlreadyRegistered } from '../domain/CompanyAlreadyRegistered';
-import { UserId } from '../../users/domain/UserID/UserId';
 
 @Injectable()
 export class CompanyRegister {

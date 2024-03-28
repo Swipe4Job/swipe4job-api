@@ -5,17 +5,21 @@ import { SoftSkills } from '../../offer/domain/SoftSkills';
 import { Serializer } from '../../../shared/domain/Serializer';
 import { CandidateCVId } from './CandidateCVId';
 import { UserId } from '../../users/domain/UserID/UserId';
+import { CandidateDescription } from './CandidateDescription';
+import { CandidateName } from './CandidateName';
+import { CandidateLastName } from './CandidateLastName';
+import { CandidateLocation } from './CandidateLocation';
 
 export class CandidateCV implements Serializer {
   constructor(params: {
     id: CandidateCVId;
     candidateId: UserId;
-    description: string;
+    description: CandidateDescription;
     studies: Array<Study>;
     softSkills: Set<SoftSkills>;
-    name: string;
-    lastname: string;
-    location: string;
+    name: CandidateName;
+    lastname: CandidateLastName;
+    location: CandidateLocation;
     languages: Array<LanguageSkill>;
     jobExperiences: Array<JobExperience>;
   }) {
@@ -43,9 +47,9 @@ export class CandidateCV implements Serializer {
     return this._candidateId;
   }
 
-  private _description: string;
+  private _description: CandidateDescription;
 
-  get description(): string {
+  get description(): CandidateDescription {
     return this._description;
   }
 
@@ -61,21 +65,21 @@ export class CandidateCV implements Serializer {
     return this._softSkills;
   }
 
-  private _name: string;
+  private _name: CandidateName;
 
-  get name(): string {
+  get name(): CandidateName {
     return this._name;
   }
 
-  private _lastname: string;
+  private _lastname: CandidateLastName;
 
-  get lastname(): string {
+  get lastname(): CandidateLastName {
     return this._lastname;
   }
 
-  private _location: string;
+  private _location: CandidateLocation;
 
-  get location(): string {
+  get location(): CandidateLocation {
     return this._location;
   }
 
@@ -101,7 +105,7 @@ export class CandidateCV implements Serializer {
     return this;
   }
 
-  withDescription(value: string) {
+  withDescription(value: CandidateDescription) {
     this._description = value;
     return this;
   }
@@ -116,17 +120,17 @@ export class CandidateCV implements Serializer {
     return this;
   }
 
-  withName(value: string) {
+  withName(value: CandidateName) {
     this._name = value;
     return this;
   }
 
-  withLastname(value: string) {
+  withLastname(value: CandidateLastName) {
     this._lastname = value;
     return this;
   }
 
-  withLocation(value: string) {
+  withLocation(value: CandidateLocation) {
     this._location = value;
     return this;
   }
@@ -140,17 +144,53 @@ export class CandidateCV implements Serializer {
     this._jobExperiences = value;
     return this;
   }
+  public static async create(params: {
+    candidateId: string;
+    description: string;
+    studies: Array<string>;
+    softSkills: Set<string>;
+    name: string;
+    lastname: string;
+    location: string;
+    languages: Array<string>;
+    jobExperiences: Array<string>;
+  }) {
+    return new CandidateCV({
+      id: CandidateCVId.random(),
+      candidateId: new UserId(params.candidateId),
+      description: new CandidateDescription(params.description),
+      studies: new Array<Study>(),
+      softSkills: new Set<SoftSkills>(),
+      name: new CandidateName(params.name),
+      lastname: new CandidateLastName(params.name),
+      location: new CandidateLocation(params.location),
+      languages: new Array<LanguageSkill>(),
+      jobExperiences: new Array<JobExperience>(),
+    });
+  }
 
   serialize() {
     return {
       languages: this.languages.map((l) => l.serialize()),
       jobExperiences: this.jobExperiences.map((j) => j.serialize()),
-      name: this.name,
-      lastname: this.lastname,
-      location: this.location,
+      name: this.name.value,
+      lastname: this.lastname.value,
+      location: this.location.value,
       studies: this.studies.map((s) => s.serialize()),
-      description: this.description,
+      description: this.description.value,
       softSkills: Array.from(this.softSkills).map((s) => s.value),
-    };
+    }; //aquest es el meu modificat per si no es pot tocar i es fa de una altre manera
   }
+  // serialize() {
+  //   return {
+  //     languages: this.languages.map((l) => l.serialize()),
+  //     jobExperiences: this.jobExperiences.map((j) => j.serialize()),
+  //     name: this.name,
+  //     lastname: this.lastname,
+  //     location: this.location,
+  //     studies: this.studies.map((s) => s.serialize()),
+  //     description: this.description,
+  //     softSkills: Array.from(this.softSkills).map((s) => s.value),
+  //   };
+  // }
 }

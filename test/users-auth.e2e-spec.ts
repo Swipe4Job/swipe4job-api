@@ -111,7 +111,7 @@ describe('UserAuthController (e2e)', () => {
       new User({
         id: UserId.random(),
         role: UserRole.ADMIN,
-        walletAddress: new WalletAddress(wallet.address),
+        walletAddress: new WalletAddress(wallet.address), //todo aqui encara hi han coses de walletAddres!!!
         password: await UserPassword.create('1234'),
         phoneNumber: new PhoneNumber('1234'),
         email: new UserEmail('example@email.com'),

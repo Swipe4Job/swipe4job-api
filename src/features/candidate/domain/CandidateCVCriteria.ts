@@ -44,4 +44,7 @@ export class CandidateCVCriteria extends Criteria {
       orders: Orders.EMPTY(),
     });
   }
+  public static fromCriteria(criteria: Criteria) {
+    return new CandidateCVCriteria(criteria);
+  }
 }
